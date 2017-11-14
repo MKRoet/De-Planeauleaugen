@@ -12,7 +12,7 @@ pattern3 = ['.']
 # hoe groot het venster is dat geopend wordt
 f = plt.figure(figsize=(7,7), dpi=100)
 
-#
+# weergeeft subplot en lengte van de assen
 a = plt.subplot(111, aspect='equal')
 a.plot()
 a.axis([0,180,0,160])
