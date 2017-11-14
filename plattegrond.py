@@ -67,5 +67,3 @@ dataPlot.show()
 dataPlot.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
 #-------------------------------------------------------------------------------
 master.mainloop()
-
-# yo
