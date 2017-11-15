@@ -8,11 +8,10 @@ class House(object):
     depth = 0
     base_detached = 0
 
-    def __init__(self, x_coordinate, y_coordinate, added_detached, percentage):
+    def __init__(self, x_coordinate, y_coordinate):
         self.x_coordinate = x_coordinate
         self.y_coordinate = y_coordinate
-        self.added_detached = added_detached
-        self.percentage = percentage
+
 
     @abstractmethod
     def house_type(self):
@@ -47,3 +46,8 @@ class Maison(House):
 
     def house_type(self):
         return 'maison'
+
+class Water(House):
+
+    width = 48
+    depth = 120

@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
+from classesnew import *
 
 #-----------------------------------------------------------------------------
 
@@ -13,9 +14,9 @@ pattern3 = ['.']
 f = plt.figure(figsize=(7,7), dpi=100)
 
 # weergeeft subplot en lengte van de assen
-a = plt.subplot(111, aspect='equal')
-a.plot()
-a.axis([0,180,0,160])
+ax = plt.subplot(111, aspect='equal')
+ax.plot()
+ax.axis([0,180,0,160])
 
 # as labels
 plt.xlabel('180 meter')
@@ -24,55 +25,57 @@ plt.ylabel('160 meter')
 # intervallen van de grid lines van de x- en y-as
 major_ticksy = np.arange(0, 170, 10)
 major_ticksx = np.arange(0, 190, 10)
-a.set_yticks(major_ticksy)
-a.set_xticks(major_ticksx)
+ax.set_yticks(major_ticksy)
+ax.set_xticks(major_ticksx)
+
+# coordinaten gelinkt met classes
+buildingF = Familyhome(30,30)
+buildingB = Bungalow(30,90)
+buildingM = Maison(30,60)
+water = Water(132,0)
 
 # creëert eengezinswoning
 for p in [
     patches.Rectangle(
-        (30, 30),
-        8.0,
-        8.0,
+        (buildingF.x_coordinate, buildingF.y_coordinate),
+        buildingF.width, buildingF.depth,
         hatch=pattern1[i],
         facecolor="orange"
     ) for i in range(len(pattern1))
 ]:
-    a.add_patch(p)
+    ax.add_patch(p)
 
 # creëert bungalow
 for g in [
     patches.Rectangle(
-        (30, 90),
-        10.0,
-        7.5,
+        (buildingB.x_coordinate, buildingB.y_coordinate),
+        buildingB.width, buildingB.depth,
         hatch=pattern2[i],
         facecolor="pink"
     ) for i in range(len(pattern2))
 ]:
-    a.add_patch(g)
+    ax.add_patch(g)
 
 # creëert maison
 for q in [
     patches.Rectangle(
-        (30, 60),
-        11.0,
-        10.5,
+        (buildingM.x_coordinate, buildingM.y_coordinate),
+        buildingM.width, buildingM.depth,
         hatch=pattern3[i],
         facecolor="yellow"
     ) for i in range(len(pattern3))
 ]:
-    a.add_patch(q)
+    ax.add_patch(q)
 
-# creëert water
+# # creëert water
 for t in [
     patches.Rectangle(
-        (132, 0.0),
-        48.0,
-        120.0,
+        (water.x_coordinate, water.y_coordinate),
+        water.width, water.depth,
         fill="blue"
     )
 ]:
-    a.add_patch(t)
+    ax.add_patch(t)
 
 plt.grid()
 plt.show()
