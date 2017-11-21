@@ -2,7 +2,7 @@ from abc import ABCMeta, abstractmethod
 from randomize import *
 
 # -------------------------------------------------------------------------
-
+# TEST
 # Overkoepelende klasse voor de objecten in het veld.
 class House(object):
 
