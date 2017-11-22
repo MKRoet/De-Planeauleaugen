@@ -2,26 +2,28 @@ import random
 
 # https://stackoverflow.com/questions/19668463/generating-multiple-random-x-y-coordinates-excluding-duplicates
 
-radius = 2
-rangeX = (0, 10)
-rangeY = (0, 10)
-qty = 10  # or however many points you want
+def random(randPoints):
 
-# Generate a set of all points within 200 of the origin, to be used as offsets later
-deltas = set()
-for x in range(-radius, radius+1):
-    for y in range(-radius, radius+1):
-        if x*x + y*y <= radius*radius:
-            deltas.add((x,y))
+    radius = 2
+    rangeX = (0, 180)
+    rangeY = (0, 160)
+    qty = 1  # or however many points you want
 
-randPoints = []
-excluded = set()
-i = 0
-while i<qty:
-    x = random.randrange(*rangeX)
-    y = random.randrange(*rangeY)
-    if (x,y) in excluded: continue
-    randPoints.append((x,y))
-    i += 1
-    excluded.update((x+dx, y+dy) for (dx,dy) in deltas)
-print randPoints
+    # Generate a set of all points within 200 of the origin, to be used as offsets later
+    deltas = set()
+    for x in range(-radius, radius+1):
+        for y in range(-radius, radius+1):
+            if x*x + y*y <= radius*radius:
+                deltas.add((x,y))
+
+    randPoints = []
+    excluded = set()
+    i = 0
+    while i<qty:
+        x = random.randrange(*rangeX)
+        y = random.randrange(*rangeY)
+        if (x,y) in excluded: continue
+        randPoints.append((x,y))
+        i += 1
+        excluded.update((x+dx, y+dy) for (dx,dy) in deltas)
+    return (randPoints)

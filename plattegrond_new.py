@@ -28,17 +28,17 @@ major_ticksx = np.arange(0, 190, 10)
 ax.set_yticks(major_ticksy)
 ax.set_xticks(major_ticksx)
 
-# coordinaten gelinkt met classes
-buildingF = Familyhome(30,30)
-buildingB = Bungalow(30,90)
-buildingM = Maison(30,60)
-water = Water(132,0)
+# roept
+fh = Familyhouse()
+bgl = Bungalow()
+ms = Maison()
+wtr = Water()
 
 # creëert eengezinswoning
 for p in [
     patches.Rectangle(
-        (buildingF.x_coordinate, buildingF.y_coordinate),
-        buildingF.width, buildingF.depth,
+        (fh.x_coordinate, fh.y_coordinate),
+        fh.width, fh.depth,
         hatch=pattern1[i],
         facecolor="orange"
     ) for i in range(len(pattern1))
@@ -48,8 +48,8 @@ for p in [
 # creëert bungalow
 for g in [
     patches.Rectangle(
-        (buildingB.x_coordinate, buildingB.y_coordinate),
-        buildingB.width, buildingB.depth,
+        (bgl.x_coordinate, bgl.y_coordinate),
+        bgl.width, bgl.depth,
         hatch=pattern2[i],
         facecolor="pink"
     ) for i in range(len(pattern2))
@@ -59,19 +59,19 @@ for g in [
 # creëert maison
 for q in [
     patches.Rectangle(
-        (buildingM.x_coordinate, buildingM.y_coordinate),
-        buildingM.width, buildingM.depth,
+        (ms.x_coordinate, ms.y_coordinate),
+        ms.width, ms.depth,
         hatch=pattern3[i],
         facecolor="yellow"
     ) for i in range(len(pattern3))
 ]:
     ax.add_patch(q)
 
-# # creëert water
+# creëert water
 for t in [
     patches.Rectangle(
-        (water.x_coordinate, water.y_coordinate),
-        water.width, water.depth,
+        (wtr.x_coordinate, wtr.y_coordinate),
+        wtr.width, wtr.depth,
         fill="blue"
     )
 ]:

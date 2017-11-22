@@ -1,4 +1,7 @@
 from abc import ABCMeta, abstractmethod
+import random
+
+
 class House(object):
 
     __metaclass__ = ABCMeta
@@ -8,16 +11,18 @@ class House(object):
     depth = 0
     base_detached = 0
 
-    def __init__(self, x_coordinate, y_coordinate):
-        self.x_coordinate = x_coordinate
-        self.y_coordinate = y_coordinate
-
+    def __init__(self):
+        self.x_coordinate = random.randint(0,180)
+        self.y_coordinate = random.randint(0,160)
 
     @abstractmethod
     def house_type(self):
         pass
 
-class Familyhome(House):
+class Familyhouse(House):
+
+    def __init__(self):
+        House.__init__(self)
 
     base_sale_price = 285000
     width = 8
@@ -29,6 +34,9 @@ def house_type(self):
 
 class Bungalow(House):
 
+    def __init__(self):
+        House.__init__(self)
+
     base_sale_price = 399000
     width = 10
     depth = 7.5
@@ -39,6 +47,9 @@ class Bungalow(House):
 
 class Maison(House):
 
+    def __init__(self):
+        House.__init__(self)
+
     base_sale_price = 610000
     width = 11
     depth = 10.5
@@ -48,6 +59,9 @@ class Maison(House):
         return 'maison'
 
 class Water(House):
+
+    def __init__(self):
+        House.__init__(self)
 
     width = 48
     depth = 120
