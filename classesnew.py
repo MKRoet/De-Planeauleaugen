@@ -4,8 +4,10 @@ import random
 
 class House(object):
 
+    # Zorgt ervoor dat er niet een 'House' geinitieerd kan worden.
     __metaclass__ = ABCMeta
 
+    # Vaste kenmerken die ieder huis bezit.
     base_sale_price = 0
     width = 0
     depth = 0
@@ -15,6 +17,7 @@ class House(object):
         self.x_coordinate = random.randint(0,180)
         self.y_coordinate = random.randint(0,160)
 
+    # Geeft een string terug met het huistype
     @abstractmethod
     def house_type(self):
         pass
@@ -44,6 +47,7 @@ class Bungalow(House):
 
     def house_type(self):
         return 'bungalow'
+
 
 class Maison(House):
 
