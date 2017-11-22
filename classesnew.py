@@ -1,9 +1,7 @@
 from abc import ABCMeta, abstractmethod
-from randomize import *
+import random
 
-# -------------------------------------------------------------------------
-# TEST
-# Overkoepelende klasse voor de objecten in het veld.
+
 class House(object):
 
     # Zorgt ervoor dat er niet een 'House' geinitieerd kan worden.
@@ -15,18 +13,19 @@ class House(object):
     depth = 0
     base_detached = 0
 
-    # Aangeven op welke plek het huis moet komen.
-    def __init__(self, x_coordinate, y_coordinate):
-        self.x_coordinate = x_coordinate
-        self.y_coordinate = y_coordinate
+    def __init__(self):
+        self.x_coordinate = random.randint(0,180)
+        self.y_coordinate = random.randint(0,160)
 
-    # Geeft een string terug met het type huis (familyhome, bungalow of maison).
+    # Geeft een string terug met het huistype
     @abstractmethod
     def house_type(self):
         pass
 
-# De verschillende subklasses die in het veld komen.
-class Familyhome(House):
+class Familyhouse(House):
+
+    def __init__(self):
+        House.__init__(self)
 
     base_sale_price = 285000
     width = 8
@@ -37,6 +36,9 @@ def house_type(self):
         return 'familyhome'
 
 class Bungalow(House):
+
+    def __init__(self):
+        House.__init__(self)
 
     base_sale_price = 399000
     width = 10
@@ -49,6 +51,9 @@ class Bungalow(House):
 
 class Maison(House):
 
+    def __init__(self):
+        House.__init__(self)
+
     base_sale_price = 610000
     width = 11
     depth = 10.5
@@ -58,6 +63,9 @@ class Maison(House):
         return 'maison'
 
 class Water(House):
+
+    def __init__(self):
+        House.__init__(self)
 
     width = 48
     depth = 120
