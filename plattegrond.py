@@ -1,69 +1,95 @@
-#!/usr/apps/Python/bin/python
-import matplotlib, sys
-matplotlib.use('TkAgg')
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
-from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from tkinter import *
+import numpy as np
+from classesnew import *
 
-master = Tk()
-master.title("Plattegrond Planeauleaugen")
-#-------------------------------------------------------------------------------
-pattern1 = ['*']
-pattern2 = ['x']
-pattern3 = ['.']
+#-----------------------------------------------------------------------------
 
-f = Figure(figsize=(10,10), dpi=100)
-a = f.add_subplot(111, aspect='equal')
-a.plot()
-a.axis([0,18,0,16])
-a.set_facecolor('#8DDA00')
-for p in [
-    patches.Rectangle(
-        (3.0, 3.0),
-        0.8,
-        0.8,
-        hatch=pattern1[i],
-        facecolor="orange"
-    ) for i in range(len(pattern1))
-]:
-    a.add_patch(p)
+# hoe groot het venster is dat geopend wordt
+f = plt.figure(figsize=(7,7), dpi=100)
 
-for g in [
-    patches.Rectangle(
-        (3.0, 9.0),
-        1.0,
-        0.75,
-        hatch=pattern2[i],
-        facecolor="pink"
-    ) for i in range(len(pattern2))
-]:
-    a.add_patch(g)
+# weergeeft subplot en lengte van de assen
+ax = plt.subplot(111, aspect='equal')
+ax.plot()
+ax.axis([0,180,0,160])
 
-for q in [
-    patches.Rectangle(
-        (3.0, 6.0),
-        1.1,
-        1.05,
-        hatch=pattern3[i],
-        facecolor="yellow"
-    ) for i in range(len(pattern3))
-]:
-    a.add_patch(q)
+# as labels
+plt.xlabel('180 meter')
+plt.ylabel('160 meter')
 
-for t in [
-    patches.Rectangle(
-        (13.2, 0.0),
-        4.8,
-        12.0,
-        fill="blue"
-    )
-]:
-    a.add_patch(t)
+# intervallen van de grid lines van de x- en y-as
+major_ticksy = np.arange(0, 170, 10)
+major_ticksx = np.arange(0, 190, 10)
+ax.set_yticks(major_ticksy)
+ax.set_xticks(major_ticksx)
 
+# verschillende soorten huizen
+fh = Familyhouse()
+bgl = Bungalow()
+ms = Maison()
+wtr = Water()
 
-dataPlot = FigureCanvasTkAgg(f, master=master)
-dataPlot.show()
-dataPlot.get_tk_widget().pack(side=TOP, fill=BOTH, expand=1)
-#-------------------------------------------------------------------------------
-master.mainloop()
+list = []
+
+total_buildings = int(input("Hoeveel huizen moeten er op de plattegrond? (20, 40, 60)\n"))
+if total_buildings != 20: #40 en 60 moeten erbij
+    print("Het aantal huizen moet 20, 40 of 60 zijn")
+    exit()
+
+fh_amount = float(total_buildings) * 0.6
+bgl_amount = float(total_buildings) * 0.25
+ms_amount = float(total_buildings) * 0.15
+
+fh_list = ['fh'] * int(fh_amount)
+bgl_list = ['bgl'] * int(bgl_amount)
+ms_list = ['ms'] * int(ms_amount)
+
+list.append(fh_list + bgl_list + ms_list)
+
+for i in range int(fh_amount):
+    if 'fh':
+        temp = patches.Rectangle((fh.x_coordinate, fh.y_coordinate),fh.width, fh.depth)
+        ax.add_patch(temp)
+
+# # # creëert eengezinswoning
+# # ax.add_patch(
+# #     patches.Rectangle(
+# #         (fh.x_coordinate, fh.y_coordinate),
+# #         fh.width, fh.depth,
+# #         )
+# # ) for i in range()
+#
+# # creëert bungalow
+# for g in [
+#     patches.Rectangle(
+#         (bgl.x_coordinate, bgl.y_coordinate),
+#         bgl.width, bgl.depth,
+#         hatch=pattern2[i],
+#         facecolor="pink"
+#     )
+# ]:
+#     ax.add_patch(g)
+#
+# # creëert maison
+# for q in [
+#     patches.Rectangle(
+#         (ms.x_coordinate, ms.y_coordinate),
+#         ms.width, ms.depth,
+#         hatch=pattern3[i],
+#         facecolor="yellow"
+#     ) for i in range(len(pattern3))
+# ]:
+#     ax.add_patch(q)
+#
+# # creëert water
+# for t in [
+#     patches.Rectangle(
+#         (wtr.x_coordinate, wtr.y_coordinate),
+#         wtr.width, wtr.depth,
+#         fill="blue"
+#     )
+# ]:
+#     ax.add_patch(t)
+
+plt.grid()
+plt.show()
