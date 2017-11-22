@@ -34,10 +34,6 @@ bgl = Bungalow()
 ms = Maison()
 wtr = Water()
 
-size = 5
-
-for a in range(size) [
-
     # creeert eengezinswoning
     for p in [
         patches.Rectangle(
@@ -81,7 +77,6 @@ for a in range(size) [
     ]:
         ax.add_patch(t)
 
-        ]
 
 plt.grid()
 plt.show()
