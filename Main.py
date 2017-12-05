@@ -50,19 +50,36 @@ print(house_lists)
 
 for house in house_lists:
 
+    coord = Randomize()
+
+    # beschikbaard?
+
     if house == 'fh':
         house_type = Familyhouse
+        house_type.exist.extend(coord)
         color = 'green'
 
     if house == 'bgl':
         house_type = Bungalow
+        house_type.exist.extend(coord)
         color = 'yellow'
 
     if house == 'ms':
         house_type = Maison
+        house_type.exist.extend(coord)
         color = 'pink'
 
-    temp = patches.Rectangle((Randomize()), house_type.width, house_type.depth, facecolor=color, edgecolor='black')
+
+
+# MAISON.EXIST[2]
+#
+# []
+#
+#     check of het met een van de huizen in aanraking komt door house_type.exist naa te gaan
+
+    temp = patches.Rectangle(house_type.exist, house_type.width, house_type.depth, facecolor=color, edgecolor='black')
     ax.add_patch(temp)
+
+
 
 PlotMap()

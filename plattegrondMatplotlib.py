@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
-from classes import *
 import math
+from classes import *
 
 #-----------------------------------------------------------------------------
 
@@ -45,7 +45,6 @@ ms_list = ['ms'] * int(ms_amount)
 
 # voegt alle huizen toe aan de list
 house_lists.extend(fh_list + bgl_list + ms_list)
-print(house_lists)
 
 for list in house_lists:
 
@@ -65,7 +64,7 @@ for list in house_lists:
     y = random.randint(0,160)
 
 
-    temp = patches.Rectangle((x,y), house_type.width, house_type.depth, color=color)
+    temp = patches.Rectangle((x,y), house_type.width, house_type.depth, facecolor=color, edgecolor='black')
     ax.add_patch(temp)
 
 plt.grid()

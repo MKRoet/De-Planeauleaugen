@@ -1,6 +1,12 @@
 from abc import ABCMeta, abstractmethod
 import random
 
+class GroundPlan:
+
+    def __init__(self, width, depth):
+        self.width = 180
+        self.depth = 160
+
 class HouseList:
 
     def __init__(self):
@@ -15,11 +21,8 @@ class HouseList:
             sumScore+=h.getScore()
         return sumScore
 
-
-
     def draw(self):
         pass # ....
-
 
 class House(object):
 
@@ -39,6 +42,7 @@ class House(object):
         self.x_coordinate = random.randint(0,180)
         self.y_coordinate = random.randint(0,160)
 
+
     def contraintCheck(self,houseList):
         for h in houseList:
             if self.name!=h.name:
@@ -53,7 +57,6 @@ class House(object):
             if d<shortestDistance:
                 shortestDistance=d
         return shortestDistance
-
 
     def getDistance(self,h2):
 

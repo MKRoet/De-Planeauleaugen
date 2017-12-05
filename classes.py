@@ -1,7 +1,6 @@
 from abc import ABCMeta, abstractmethod
 import random
 
-
 class House(object):
 
     __metaclass__ = ABCMeta
@@ -20,6 +19,7 @@ class House(object):
         pass
 
 class Familyhouse(House):
+
     # def __init__(self):
     #     House.__init__(self)
 
@@ -28,8 +28,8 @@ class Familyhouse(House):
     depth = 8
     base_detached = 2
 
-def house_type(self):
-        return 'familyhome'
+    def house_type(self):
+        return 'familyhouse'
 
 class Bungalow(House):
 

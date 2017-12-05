@@ -29,8 +29,6 @@ class House(object):
     width = 0
     depth = 0
     base_detached = 0
-    x = 0
-    y = 0
 
     def __init__(self, x, y):
         self.house_type = house_type
