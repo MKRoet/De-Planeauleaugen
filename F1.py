@@ -1,25 +1,14 @@
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-#import numpy as np
-from W1 import *
-#import math
 import random
 
-def Randomize():
+def getRandom_coordinates():
     x = random.randint(0,180)
     y = random.randint(0,160)
-    return ((x, y))
+    return ((x,y))
 
 def PlotMap():
    plt.grid()
    plt.show()
-
-# def MapBounds():
-#     if (house.x - house.detached >= 0) and \
-#     (house.x + house.depth + house.detached < 160) and \
-#     (house.y - house.detached >= 0) and \
-#     (house.y + house.width + house.detached > 180):
-#         return True
 
 # def drawHouses():
 #     print(house_lists)

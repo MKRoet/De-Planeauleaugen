@@ -1,25 +1,5 @@
 from abc import ABCMeta, abstractmethod
-#import random
 from F1 import *
-
-
-# class HouseList:
-#
-#     def __init__(self):
-#         self.houseList=[]
-#
-#     def addHouse(self,house):
-#         self.houseList.append(house)
-#
-#     def getScore(self):
-#         sumScore=0
-#         for h in self.houseList:
-#             sumScore+=h.getScore()
-#         return sumScore
-#
-#
-#     def draw(self):
-#         pass # ....
 
 class HouseList:
 
@@ -30,23 +10,54 @@ class HouseList:
         self.ms_amount = int(float(total_buildings) * 0.15)
 
         for i in range(self.fh_amount):
-            x,y = Randomize()
-            house_type = Familyhouse(x,y)
+            while True:
+                x,y = getRandom_coordinates()
+                house_type = Familyhouse(x,y)
+                if self.MapBounds(house_type) and not self.overlap(house_type):
+                    break
             self.houseList.append(house_type)
         for i in range(self.bgl_amount):
-            x,y = Randomize()
-            house_type = Bungalow(x,y)
+            while True:
+                x,y = getRandom_coordinates()
+                house_type = Bungalow(x,y)
+                if self.MapBounds(house_type) and not self.overlap(house_type):
+                    break
             self.houseList.append(house_type)
         for i in range(self.ms_amount):
-            x,y = Randomize()
-            house_type = Maison(x,y)
+            while True:
+                x,y = getRandom_coordinates()
+                house_type = Maison(x,y)
+                if self.MapBounds(house_type) and not self.overlap(house_type):
+                    break
             self.houseList.append(house_type)
+
+    def MapBounds(self, house_type):
+        if (house_type.x - house_type.detached < 0):
+            # print("x1:"+str(house_type.x) + " " + str(house_type.detached))
+            return False
+        if (house_type.x + house_type.width + house_type.detached > 180):
+            return False
+        if (house_type.y - house_type.detached < 0):
+            return False
+        if (house_type.y + house_type.depth + house_type.detached > 160):
+            return False
+
+        return True
+
+    def overlap(self, house_type):
+        for h in self.houseList:
+            if house_type.overlap(h):
+                return True
+        return False
 
     def getTotal_buildings(self):
         return len(self.houseList)
 
     def draw(self):
         return self.houseList.pop()
+
+    def getDetached(self):
+        return self.houseList
 
 class House(object):
 
@@ -60,18 +71,6 @@ class House(object):
     y = 0
 
     def __init__(self, x, y):
-        #self.house_type = house_type
-        #self.leftLowerX = x
-        #self.leftLowerY = y
-
-        #self.rightLowerX = leftLowerX + width
-        #self.rightLowerY = y
-
-        #self.leftUpperX = x
-        #self.leftUpperY = y + depth
-
-        #self.rightUpperX = x + width
-        #self.rightUpperY = y + depth
         self.x = x
         self.y = y
 
@@ -81,6 +80,106 @@ class House(object):
     def getY(self):
         return self.y
 
+    def overlap(self,h):
+        # print("h.x:"+str(h.x) + " self.x:" + str(self.x)+" self.width:"+str(self.width))
+        # print("h.y:"+str(h.y) + " self.y:" + str(self.y)+" self.depth:"+str(self.depth))
+        if h.x+h.width<self.x:
+            return False
+        if h.x>self.x+self.width:
+            return False
+        if h.y+h.depth<self.y:
+            return False
+        if h.y>self.y+self.depth:
+            return False
+        return True
+
+    def testOverlap():
+        m1=Maison(0,0)
+        m2=Maison(3,2)
+        return m1.overlap(m2)
+
+    # def getShortestDistance(self, HL):
+    #
+    #     shortestDistance=9999999999
+    #     for h2 in HL.houseList:
+    #         d=self.getDistance(h2)
+    #         if d<shortestDistance:
+    #             shortestDistance=d
+    #     return shortestDistance
+    #
+    # def getDistance(self, house):
+    #
+    #     # Creeer een lijst voor de afstanden
+    #     distances = []
+    #
+    #     # # Ga alle huizen af
+    #     # for house in HouseList:
+    #
+    #     # Overlap horizontale as
+    #     if self.y <= house.y <= (self.y + self.depth) or self.y <= (house.y + house.depth) <= (self.y + self.depth):
+    #
+    #         # Links
+    #         if self.x > house.x:
+    #             distance = (self.x - house.x) - house.width
+    #             distances.append(distance)
+    #
+    #         # Rechts
+    #         elif self.x < house.x:
+    #             distance = (house.x - self.x) - self.width
+    #             distances.append(distance)
+    #
+    #     # Overlap verticale as
+    #     elif self.x <= house.x <= (self.x + self.width) or self.x <= (house.x + house.width) <= (self.x + self.width):
+    #
+    #             # Boven
+    #             if self.y < house.y:
+    #                 distance = (house.y - self.y) - self.depth
+    #                 distances.append(distance)
+    #
+    #             # Onder
+    #             elif self.y > house.y:
+    #                 distance = (self.y - house.y) - house.depth
+    #                 distances.append(distance)
+    #
+    #     # Schuin boven
+    #     elif (self.y + self.depth) < house.y:
+    #
+    #         # Links
+    #         if self.x > house.x:
+    #             ab = house.y - (self.y + self.depth)
+    #             bc = self.x - (house.x + house.width)
+    #             ac = ab**2 + bc**2
+    #             distance = math.sqrt(ac)
+    #             distances.append(distance)
+    #
+    #         # Rechts
+    #         elif self.x < house.x:
+    #             ab = house.y - (self.y + self.depth)
+    #             bc = house.x - (self.x + self.width)
+    #             ac = ab**2 + bc**2
+    #             distance = math.sqrt(ac)
+    #             distances.append(distance)
+    #
+    #     #Schuin Onder
+    #     elif self.y > (house.y + house.depth):
+    #
+    #         # Links
+    #         if self.x > house.x:
+    #             ab = self.y - (house.y + house.depth)
+    #             bc = self.x - (house.x + house.width)
+    #             ac = ab**2 + bc**2
+    #             distance = math.sqrt(ac)
+    #             distances.append(distance)
+    #
+    #         # Rechts
+    #         elif self.x < house.x:
+    #             ab = self.y - (house.y + house.depth)
+    #             bc = house.x - (self.x + self.width)
+    #             ac = ab**2 + bc**2
+    #             distance = math.sqrt(ac)
+    #             distances.append(distance)
+    #
+    #     print(distances)
 
 class Familyhouse(House):
 

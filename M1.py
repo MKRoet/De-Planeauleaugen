@@ -6,7 +6,6 @@ from F1 import *
 import math
 
 #-----------------------------------------------------------------------------
-
 # hoe groot het venster is dat geopend wordt
 f = plt.figure(figsize=(7,7), dpi=100)
 
@@ -25,21 +24,20 @@ major_ticksx = np.arange(0, 190, 10)
 ax.set_yticks(major_ticksy)
 ax.set_xticks(major_ticksx)
 
-# creeërt een list
-house_lists = []
-
 # vraagt om welk type plattegrond
 total_buildings = int(input("Hoeveel huizen moeten er op de plattegrond? (20, 40, 60)\n"))
 if not total_buildings in [20, 40, 60]:
     print("Het aantal huizen moet 20, 40 of 60 zijn")
     exit()
 
+# haalt de houselist op
 houses = HouseList(total_buildings)
 
+# loopt over alle huizen in de house list en creert een patch
 for i in range(houses.getTotal_buildings()):
     house = houses.draw()
     temp = patches.Rectangle((house.x,house.y), house.width, house.depth, facecolor=house.color, edgecolor='black')
     ax.add_patch(temp)
-    print(house.x)
 
+# roept plot functie aan
 PlotMap()
