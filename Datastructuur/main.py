@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
-from W1 import *
-from F1 import *
+from classes import *
+from functions import *
 
 #-----------------------------------------------------------------------------
 
