@@ -74,8 +74,12 @@ class HouseList:
                     shortestDistance = distance
         return shortestDistance
 
-    # def getScore():
-    #     TODO
+    def getScore(self, house_type):
+        sumScore = 0
+        for h in self.houseList:
+                score = house_type.getScore(h)
+                sumScore += score
+        return sumScore
 
     # def __getitem__(self, item):
     #     return self.houseList[item]
@@ -169,8 +173,12 @@ class House(object):
 
         return distance
 
-    # def getScore():
-    #     TODO
+    def getScore(self):
+        detached_extra = House.getDistance(self) - self.detached
+        totalpercentage_addedvalue = detached_extra * self.percentage_addedvalue
+        addedvalue = self.base_sale_price * totalpercentage_addedvalue
+        score = self.base_sale_price + addedvalue
+        return score
 
 class Familyhouse(House):
 
