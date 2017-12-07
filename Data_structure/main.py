@@ -30,7 +30,6 @@ ax.set_axisbelow(True)
 total_buildings = int(input("Hoeveel huizen moeten er op de plattegrond? (20, 40, 60)\n"))
 if not total_buildings in [20, 40, 60]:
     print("Het aantal huizen moet 20, 40 of 60 zijn")
-    exit()
 
 # gets access to the houselist
 houses = HouseList(total_buildings)

@@ -19,10 +19,10 @@ class HouseList:
         self.bgl_amount = int(float(total_buildings) * percentage_bungalow)
         self.ms_amount = int(float(total_buildings) * percentage_maison)
 
-        for i in range(self.ms_amount):
+        for i in range(self.fh_amount):
             while True:
                 x,y = getRandom_coordinates()
-                house_type = Maison(x,y)
+                house_type = Familyhouse(x,y)
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
@@ -33,17 +33,16 @@ class HouseList:
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
-        for i in range(self.fh_amount):
+        for i in range(self.ms_amount):
             while True:
                 x,y = getRandom_coordinates()
-                house_type = Familyhouse(x,y)
+                house_type = Maison(x,y)
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
 
     def MapBounds(self, house_type):
         if (house_type.x - house_type.detached < 0):
-            # print("x1:"+str(house_type.x) + " " + str(house_type.detached))
             return False
         if (house_type.x + house_type.width + house_type.detached > width_graph):
             return False
@@ -101,15 +100,13 @@ class House(object):
         return self.y
 
     def overlap(self,h):
-        print("h.x:"+str(h.x) + " self.x:" + str(self.x)+" self.width:"+str(self.width) +" self.detached:"+str(self.detached))
-        # print("h.y:"+str(h.y) + " self.y:" + str(self.y)+" self.height:"+str(self.height))
-        if h.x + h.width + h.detached < self.x:
+        if h.x + h.width + h.detached <= self.x and self.x - self.detached >= h.x + h.width:
             return False
-        if h.x > self.x + self.width + self.detached:
+        if h.x - h.detached >= self.x + self.width and self.x + self.width + self.detached <= h.x:
             return False
-        if h.y + h.height + h.detached < self.y:
+        if h.y + h.height + h.detached <= self.y and self.y - self.detached >= h.y + h.height:
             return False
-        if h.y > self.y + self.height + self.detached:
+        if h.y - h.detached >= self.y + self.height and self.y + self.height + self.detached <= h.y:
             return False
         return True
 
@@ -207,13 +204,3 @@ class Maison(House):
     height = 10.5
     detached = 6
     color = 'pink'
-
-# class Water(House):
-#
-#     # def __init__(self):
-#     #     House.__init__(self)
-#
-#     width = 48
-#     height = 120
-#     color = 'blue'
-#     TODO
