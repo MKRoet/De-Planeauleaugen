@@ -23,6 +23,7 @@ major_ticksy = np.arange(0, 170, 10)
 major_ticksx = np.arange(0, 190, 10)
 ax.set_yticks(major_ticksy)
 ax.set_xticks(major_ticksx)
+ax.minorticks_on()
 ax.set_axisbelow(True)
 
 # asks which type of floor plan should be displayed

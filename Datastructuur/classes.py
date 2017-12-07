@@ -1,4 +1,3 @@
-from abc import ABCMeta
 from functions import *
 import math
 
@@ -20,10 +19,10 @@ class HouseList:
         self.bgl_amount = int(float(total_buildings) * percentage_bungalow)
         self.ms_amount = int(float(total_buildings) * percentage_maison)
 
-        for i in range(self.fh_amount):
+        for i in range(self.ms_amount):
             while True:
                 x,y = getRandom_coordinates()
-                house_type = Familyhouse(x,y)
+                house_type = Maison(x,y)
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
@@ -34,10 +33,10 @@ class HouseList:
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
-        for i in range(self.ms_amount):
+        for i in range(self.fh_amount):
             while True:
                 x,y = getRandom_coordinates()
-                house_type = Maison(x,y)
+                house_type = Familyhouse(x,y)
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
@@ -83,8 +82,6 @@ class HouseList:
     #     return self.houseList[item]
 
 class House(object):
-
-    __metaclass__ = ABCMeta
 
     base_sale_price = 0
     width = 0
@@ -189,10 +186,6 @@ class Familyhouse(House):
     detached = 2
     color = 'green'
 
-    # def house_type(self):
-    #     return 'familyhouse'
-        # TODO kan weg??
-
 class Bungalow(House):
 
     def __init__(self,x,y):
@@ -204,11 +197,6 @@ class Bungalow(House):
     detached = 3
     color = 'yellow'
 
-    # def house_type(self):
-    #     return 'bungalow'
-        # TODO kan weg??
-
-
 class Maison(House):
 
     def __init__(self,x,y):
@@ -219,10 +207,6 @@ class Maison(House):
     height = 10.5
     detached = 6
     color = 'pink'
-
-    # def house_type(self):
-    #     return 'maison'
-        # TODO kan weg??
 
 # class Water(House):
 #
