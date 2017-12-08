@@ -69,16 +69,25 @@ class HouseList:
         shortestDistance=99999999
         for h in self.houseList:
             if h is not house_type:
-                distance = house_type.getDistance(h)
-                if distance < shortestDistance:
-                    shortestDistance = distance
+                free_space = house_type.getDistance(h)
+                print("Free_space: " + str(free_space))
+                if free_space < shortestDistance:
+                    shortestDistance = free_space
+                    print("Temp_short: " + str(shortestDistance))
+        print("\n" + "Short: " + str(shortestDistance))
         return shortestDistance
 
     def getScore(self, house_type):
         sumScore = 0
         for h in self.houseList:
-                score = house_type.getScore(h)
+            if h is not house_type:
+                print("House: " + str(h))
+                print("Coördinates: " + "X:" + str(h.x) + " Y:" + str(h.y) + "\n")
+                score = House.getScore(self, h)
+                print("Score: " + str(score))
                 sumScore += score
+                print("Sum: " + str(sumScore) + "\n")
+        print("Total: " + str(sumScore))
         return sumScore
 
     # def __getitem__(self, item):
@@ -90,6 +99,7 @@ class House(object):
     width = 0
     height = 0
     detached = 0
+    percentage_addedvalue = 0
     x = 0
     y = 0
 
@@ -115,6 +125,7 @@ class House(object):
         return True
 
     def getDistance(self, house):
+        global distance
         # Overlap horizontale as
         if self.y <= house.y <= (self.y + self.height) or self.y <= (house.y + house.height) <= (self.y + self.height):
 
@@ -173,11 +184,11 @@ class House(object):
 
         return distance
 
-    def getScore(self):
-        detached_extra = House.getDistance(self) - self.detached
-        totalpercentage_addedvalue = detached_extra * self.percentage_addedvalue
-        addedvalue = self.base_sale_price * totalpercentage_addedvalue
-        score = self.base_sale_price + addedvalue
+    def getScore(self, house):
+        detached_extra = HouseList.getDistance(self, house) - house.detached
+        totalpercentage_addedvalue = detached_extra * house.percentage_addedvalue
+        addedvalue = house.base_sale_price * totalpercentage_addedvalue
+        score = house.base_sale_price + addedvalue
         return score
 
 class Familyhouse(House):
@@ -189,6 +200,7 @@ class Familyhouse(House):
     width = 8
     height = 8
     detached = 2
+    percentage_addedvalue = 0.03
     color = 'green'
 
 class Bungalow(House):
@@ -200,6 +212,7 @@ class Bungalow(House):
     width = 10
     height = 7.5
     detached = 3
+    percentage_addedvalue = 0.04
     color = 'yellow'
 
 class Maison(House):
@@ -211,4 +224,5 @@ class Maison(House):
     width = 11
     height = 10.5
     detached = 6
+    percentage_addedvalue = 0.06
     color = 'pink'
