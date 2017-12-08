@@ -18,6 +18,12 @@ from functions import *
 
 #-------------------------------------------------------------------------------
 
+# Asks which type of floor plan should be displayed.
+total_houses = int(input("How many houses should be on the floor plan? (20, 40, 60)\n"))
+if not total_houses in [20, 40, 60]:
+    print("The amount of houses has to be 20, 40 or 60.")
+    exit()
+
 # Size of window.
 plt.figure(figsize=(7,7), dpi=100)
 
@@ -26,8 +32,13 @@ ax = plt.subplot(111, aspect='equal')
 ax.plot()
 ax.axis([0,180,0,160])
 
+# Calls HouseList with its values.
+houses = HouseList(total_houses)
+sumScore = houses.getScore(houses)
+
 # Sets titles of labels.
-plt.title('Amstelhaege - De Planeauleaugen', fontsize=16)
+plt.suptitle('Amstelhaege - De Planeauleaugen', fontsize=16)
+plt.title('Score: €{:,.2f}'.format(sumScore), fontsize=12)
 plt.xlabel('180 meter')
 plt.ylabel('160 meter')
 
@@ -38,14 +49,8 @@ ax.set_axisbelow(True)
 ax.set_yticks(major_ticksy)
 ax.set_xticks(major_ticksx)
 
-# Asks which type of floor plan should be displayed.
-total_houses = int(input("How many houses should be on the floor plan? (20, 40, 60)\n"))
-if not total_houses in [20, 40, 60]:
-    print("The amount of houses has to be 20, 40 or 60.")
-    exit()
-
 # Gets access to houseList.
-houses = HouseList(total_houses)
+# houses = HouseList(total_houses)
 
 # Iterates over all houses in house list and creates every house in list.
 for i in range(houses.getTotal_houses()):

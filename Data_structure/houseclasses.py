@@ -59,6 +59,7 @@ class HouseList:
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
+            self.getScore(house_type)
 
     # Checks if house is within map.
     def MapBounds(self, house_type):
@@ -94,11 +95,8 @@ class HouseList:
         for h in self.houseList:
             if h is not house_type:
                 free_space = house_type.getDistance(h)
-                print("Free_space: " + str(free_space))
                 if free_space < shortestDistance:
                     shortestDistance = free_space
-                    print("Temp_short: " + str(shortestDistance))
-        print("\n" + "Short: " + str(shortestDistance))
         return shortestDistance
 
     # Calculates score for every house in houseList, updates sum of score after
@@ -107,13 +105,8 @@ class HouseList:
         sumScore = 0
         for h in self.houseList:
             if h is not house_type:
-                print("House: " + str(h))
-                print("Coordinates: " + "X:" + str(h.x) + " Y:" + str(h.y) + "\n")
                 score = House.getScore(self, h)
-                print("Score: " + str(score))
                 sumScore += score
-                print("Sum: " + str(sumScore) + "\n")
-        print("Total: " + str(sumScore))
         return sumScore
 
     # def __getitem__(self, item):
@@ -170,6 +163,7 @@ class House(object):
     # Checks what the distance is between walls and corners of houses, returns
     # distance.
     def getDistance(self, house):
+        global distance
 
         # Checks for overlap on horizontal axis.
         if self.y <= house.y <= (self.y + self.height) or \
