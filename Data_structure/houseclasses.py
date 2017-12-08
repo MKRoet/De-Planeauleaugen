@@ -20,6 +20,7 @@ height_map = 160
 percentage_familyhouse = 0.6
 percentage_bungalow = 0.25
 percentage_maison = 0.15
+max_distance = 99999999
 
 #-------------------------------------------------------------------------------
 
@@ -87,7 +88,7 @@ class HouseList:
     # Checks for every house the distance to another house, returns shortest
     # distance.
     def getDistance(self, house_type):
-        shortestDistance = 99999999
+        shortestDistance = max_distance
         for h in self.houseList:
             if h is not house_type:
                 free_space = house_type.getDistance(h)
