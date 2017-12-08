@@ -49,12 +49,9 @@ ax.set_axisbelow(True)
 ax.set_yticks(major_ticksy)
 ax.set_xticks(major_ticksx)
 
-# Gets access to houseList.
-# houses = HouseList(total_houses)
-
 # Iterates over all houses in house list and creates every house in list.
-for i in range(houses.getTotal_houses()):
-    house = houses.draw()
+# for i in range(houses.getTotal_houses()):
+for house in houses.houseList:
     housePlot = patches.Rectangle((house.x,house.y), house.width, house.height,\
         facecolor=house.color, edgecolor='black')
     ax.add_patch(housePlot)

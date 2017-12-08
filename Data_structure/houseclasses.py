@@ -84,10 +84,6 @@ class HouseList:
     def getTotal_houses(self):
         return len(self.houseList)
 
-    # Pops last house from houseList.
-    def draw(self):
-        return self.houseList.pop()
-
     # Checks for every house the distance to another house, returns shortest
     # distance.
     def getDistance(self, house_type):
@@ -108,9 +104,6 @@ class HouseList:
                 score = House.getScore(self, h)
                 sumScore += score
         return sumScore
-
-    # def __getitem__(self, item):
-    #     return self.houseList[item]
 
 class House(object):
     """A House checks for overlap and distance to another house, and calculates
