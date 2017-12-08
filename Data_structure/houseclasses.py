@@ -1,10 +1,22 @@
+#-------------------------------------------------------------------------------
+# File name: houseclasses.py
+#
+# Authors: Jet van den Berg, Maurice Roet, Chantal Stangenberger
+#
+# Course: Heuristics
+#
+# This program creates classes for HouseList and House (with the child classes
+# Familyhouse, Bungalow and Maison). Both have their own methods to check for
+# overlap, distance and score.
+#-------------------------------------------------------------------------------
+
 from functions import *
 import math
 
 #-------------------------------------------------------------------------------
 
-height_graph = 160
-width_graph = 180
+width_map = 180
+height_map = 160
 percentage_familyhouse = 0.6
 percentage_bungalow = 0.25
 percentage_maison = 0.15
@@ -12,13 +24,20 @@ percentage_maison = 0.15
 #-------------------------------------------------------------------------------
 
 class HouseList:
+    """HouseList holds and updates the houseList, calculates amount of
+    house types, and checks for map bounds and overlap for every house in list.
+    Returns distance and score for total of houseList."""
 
-    def __init__(self, total_buildings):
+    # Initializes class HouseList, computes total amount of each house type.
+    def __init__(self, total_houses):
         self.houseList=[]
-        self.fh_amount = int(float(total_buildings) * percentage_familyhouse)
-        self.bgl_amount = int(float(total_buildings) * percentage_bungalow)
-        self.ms_amount = int(float(total_buildings) * percentage_maison)
+        self.fh_amount = int(float(total_houses) * percentage_familyhouse)
+        self.bgl_amount = int(float(total_houses) * percentage_bungalow)
+        self.ms_amount = int(float(total_houses) * percentage_maison)
 
+        # Iterates over every house type, generates random coordinates,
+        # sets coordinates for house type, checks for map bounds and overlap.
+        # When True, adds house type to houseList.
         for i in range(self.fh_amount):
             while True:
                 x,y = getRandom_coordinates()
@@ -41,32 +60,37 @@ class HouseList:
                     break
             self.houseList.append(house_type)
 
+    # Checks if house is within map.
     def MapBounds(self, house_type):
         if (house_type.x - house_type.detached < 0):
             return False
-        if (house_type.x + house_type.width + house_type.detached > width_graph):
+        if (house_type.x + house_type.width + house_type.detached > width_map):
             return False
         if (house_type.y - house_type.detached < 0):
             return False
-        if (house_type.y + house_type.height + house_type.detached > height_graph):
+        if (house_type.y + house_type.height + house_type.detached > height_map):
             return False
-
         return True
 
+    # Checks for every house in houseList if overlap exists.
     def overlap(self, house_type):
         for h in self.houseList:
             if house_type.overlap(h):
                 return True
         return False
 
-    def getTotal_buildings(self):
+    # Returns length of houseList.
+    def getTotal_houses(self):
         return len(self.houseList)
 
+    # Pops last house from houseList.
     def draw(self):
         return self.houseList.pop()
 
+    # Checks for every house the distance to another house, returns shortest
+    # distance.
     def getDistance(self, house_type):
-        shortestDistance=99999999
+        shortestDistance = 99999999
         for h in self.houseList:
             if h is not house_type:
                 free_space = house_type.getDistance(h)
@@ -77,12 +101,14 @@ class HouseList:
         print("\n" + "Short: " + str(shortestDistance))
         return shortestDistance
 
+    # Calculates score for every house in houseList, updates sum of score after
+    # iteration over every house in houseList.
     def getScore(self, house_type):
         sumScore = 0
         for h in self.houseList:
             if h is not house_type:
                 print("House: " + str(h))
-                print("Coördinates: " + "X:" + str(h.x) + " Y:" + str(h.y) + "\n")
+                print("Coordinates: " + "X:" + str(h.x) + " Y:" + str(h.y) + "\n")
                 score = House.getScore(self, h)
                 print("Score: " + str(score))
                 sumScore += score
@@ -94,15 +120,26 @@ class HouseList:
     #     return self.houseList[item]
 
 class House(object):
+    """A House checks for overlap and distance to another house, and calculates
+    score based on extra detached distance from other houses. Houses have the
+    following properties:
+
+    Attributes:
+        base_sale_price: An integer representing the house's price.
+        width: The house's width in meters.
+        height: The house's heigth (depth) in meters.
+        detached: The house's required free space in meters.
+        percentage_addedvalue: A float representing the house's added value per
+            meter extra detached distance.
+    """
 
     base_sale_price = 0
     width = 0
     height = 0
     detached = 0
     percentage_addedvalue = 0
-    x = 0
-    y = 0
 
+    # Initializes class House with x and y.
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -113,70 +150,65 @@ class House(object):
     def getY(self):
         return self.y
 
+    # Checks for house if other houses on right, left, top and bottom do not
+    # overlap and has correct detached distance to other houses.
     def overlap(self,h):
-        if h.x + h.width + h.detached <= self.x and self.x - self.detached >= h.x + h.width:
+        if h.x + h.width + h.detached <= self.x and \
+           self.x - self.detached >= h.x + h.width:
             return False
-        if h.x - h.detached >= self.x + self.width and self.x + self.width + self.detached <= h.x:
+        if h.x - h.detached >= self.x + self.width and \
+           self.x + self.width + self.detached <= h.x:
             return False
-        if h.y + h.height + h.detached <= self.y and self.y - self.detached >= h.y + h.height:
+        if h.y + h.height + h.detached <= self.y and \
+           self.y - self.detached >= h.y + h.height:
             return False
-        if h.y - h.detached >= self.y + self.height and self.y + self.height + self.detached <= h.y:
+        if h.y - h.detached >= self.y + self.height and \
+           self.y + self.height + self.detached <= h.y:
             return False
         return True
 
+    # Checks what the distance is between walls and corners of houses, returns
+    # distance.
     def getDistance(self, house):
-        global distance
-        # Overlap horizontale as
-        if self.y <= house.y <= (self.y + self.height) or self.y <= (house.y + house.height) <= (self.y + self.height):
 
-            # Links
-            if self.x > house.x:
+        # Checks for overlap on horizontal axis.
+        if self.y <= house.y <= (self.y + self.height) or \
+           self.y <= (house.y + house.height) <= (self.y + self.height):
+            if self.x > house.x:  # Left side
                 distance = (self.x - house.x) - house.width
-
-            # Rechts
-            elif self.x < house.x:
+            elif self.x < house.x:  # Right side
                 distance = (house.x - self.x) - self.width
 
-        # Overlap verticale as
-        elif self.x <= house.x <= (self.x + self.width) or self.x <= (house.x + house.width) <= (self.x + self.width):
-
-                # Boven
-                if self.y < house.y:
+        # Checks for overlap on vertical axis.
+        elif self.x <= house.x <= (self.x + self.width) or \
+             self.x <= (house.x + house.width) <= (self.x + self.width):
+                if self.y < house.y:  # Top side
                     distance = (house.y - self.y) - self.height
-
-                # Onder
-                elif self.y > house.y:
+                elif self.y > house.y:  # Bottom side
                     distance = (self.y - house.y) - house.height
 
-        # Schuin boven
+        # Checks for overlap on top corners of house using Pythagorean theorem.
         elif (self.y + self.height) < house.y:
-
-            # Links
-            if self.x > house.x:
+            if self.x > house.x:  # Left side
                 ab = house.y - (self.y + self.height)
                 bc = self.x - (house.x + house.width)
                 ac = ab**2 + bc**2
                 distance = math.sqrt(ac)
-
-            # Rechts
-            elif self.x < house.x:
+            elif self.x < house.x:  # Right side
                 ab = house.y - (self.y + self.height)
                 bc = house.x - (self.x + self.width)
                 ac = ab**2 + bc**2
                 distance = math.sqrt(ac)
 
-        #Schuin Onder
+        # Checks for overlap on bottom corners of house using Pythagorean
+        # theorem.
         elif self.y > (house.y + house.height):
-
-            # Links
-            if self.x > house.x:
+            if self.x > house.x:  # Left side
                 ab = self.y - (house.y + house.height)
                 bc = self.x - (house.x + house.width)
                 ac = ab**2 + bc**2
                 distance = math.sqrt(ac)
-
-            # Rechts
-            elif self.x < house.x:
+            elif self.x < house.x:  # Right side
                 ab = self.y - (house.y + house.height)
                 bc = house.x - (self.x + self.width)
                 ac = ab**2 + bc**2
@@ -184,6 +216,7 @@ class House(object):
 
         return distance
 
+    # Calculates score for house based on distance from another house.
     def getScore(self, house):
         detached_extra = HouseList.getDistance(self, house) - house.detached
         totalpercentage_addedvalue = detached_extra * house.percentage_addedvalue
@@ -192,6 +225,7 @@ class House(object):
         return score
 
 class Familyhouse(House):
+    """A Familyhouse of type House, with its own values."""
 
     def __init__(self,x,y):
          super(Familyhouse,self).__init__(x,y)
@@ -204,6 +238,7 @@ class Familyhouse(House):
     color = 'green'
 
 class Bungalow(House):
+    """A Bungalow of type House, with its own values."""
 
     def __init__(self,x,y):
          super(Bungalow,self).__init__(x,y)
@@ -216,6 +251,7 @@ class Bungalow(House):
     color = 'yellow'
 
 class Maison(House):
+    """A Maison of type House, with its own values."""
 
     def __init__(self,x,y):
          super(Maison,self).__init__(x,y)
