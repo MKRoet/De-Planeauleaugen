@@ -39,10 +39,10 @@ class HouseList:
         # Iterates over every house type, generates random coordinates,
         # sets coordinates for house type, checks for map bounds and overlap.
         # When True, adds house type to houseList.
-        for i in range(self.fh_amount):
+        for i in range(self.ms_amount):
             while True:
                 x,y = getRandom_coordinates()
-                house_type = Familyhouse(x,y)
+                house_type = Maison(x,y)
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
@@ -53,10 +53,10 @@ class HouseList:
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
-        for i in range(self.ms_amount):
+        for i in range(self.fh_amount):
             while True:
                 x,y = getRandom_coordinates()
-                house_type = Maison(x,y)
+                house_type = Familyhouse(x,y)
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
@@ -223,7 +223,7 @@ class Familyhouse(House):
     height = 8
     detached = 2
     percentage_addedvalue = 0.03
-    color = 'green'
+    color = 'mediumseagreen'
 
 class Bungalow(House):
     """A Bungalow of type House, with its own values."""
@@ -236,7 +236,7 @@ class Bungalow(House):
     height = 7.5
     detached = 3
     percentage_addedvalue = 0.04
-    color = 'yellow'
+    color = 'gold'
 
 class Maison(House):
     """A Maison of type House, with its own values."""
@@ -249,4 +249,4 @@ class Maison(House):
     height = 10.5
     detached = 6
     percentage_addedvalue = 0.06
-    color = 'pink'
+    color = 'lightcoral'

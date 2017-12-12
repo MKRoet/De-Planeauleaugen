@@ -19,7 +19,7 @@ from functions import *
 #-------------------------------------------------------------------------------
 
 bestScore = 0
-n = 3
+n = 10
 
 #-------------------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ n = 3
 total_houses = int(input("How many houses should be on the floor plan? (20, 40, 60)\n"))
 if not total_houses in [20, 40, 60]:
     print("The amount of houses has to be 20, 40 or 60.")
-    # exit()
+    exit()
 
 def randAlgorithm():
 
@@ -45,7 +45,7 @@ def randAlgorithm():
 
     # Sets titles of labels.
     plt.suptitle('Amstelhaege - De Planeauleaugen', fontsize=16)
-    plt.title('Score: €{:,.2f}'.format(sumScore), fontsize=12)
+    plt.title('Score: {:,.2f} euro'.format(sumScore), fontsize=12)
     plt.xlabel('180 meter')
     plt.ylabel('160 meter')
 
@@ -59,6 +59,11 @@ def randAlgorithm():
     # Iterates over all houses in house list and creates every house in list.
     for house in houses.houseList:
 
+        housePlotDetached = patches.Rectangle(((house.x - house.detached), \
+            (house.y - house.detached)), (house.width + house.detached * 2), \
+            (house.height + house.detached * 2), facecolor=house.color, alpha = 0.4)
+        ax.add_patch(housePlotDetached)
+
         housePlot = patches.Rectangle((house.x,house.y), house.width, house.height,\
             facecolor=house.color, edgecolor='black')
         ax.add_patch(housePlot)
@@ -66,10 +71,9 @@ def randAlgorithm():
     global bestScore
     if sumScore > bestScore:
         bestScore = sumScore
-    print("Score: €{:,.2f}".format(bestScore))
-
-    # Calls function to plot map.
-    PlotMap()
+        PlotMap()
+    print("Score: {:,.2f} euro".format(bestScore))
+    plt.close()
 
 for i in range(n):
     randAlgorithm()

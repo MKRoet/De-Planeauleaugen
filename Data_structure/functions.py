@@ -24,4 +24,6 @@ def getRandom_coordinates():
 def PlotMap():
 
     plt.grid()
-    plt.show()
+    plt.savefig('map.png', bbox_inches='tight')
+    plt.cla()
+    # plt.show()
