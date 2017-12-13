@@ -145,21 +145,49 @@ class House(object):
     def getY(self):
         return self.y
 
-    # Checks for house if other houses on right, left, top and bottom do not
-    # overlap and has correct detached distance to other houses.
-    def overlap(self,h):
-        if h.x + h.width + h.detached <= self.x and \
-           self.x - self.detached >= h.x + h.width:
+    # Checks for house (self) if other houses (house) on right, left, top,
+    # bottom and corners do not overlap and has correct detached distance to
+    # other houses. False = no overlap.
+    def overlap(self, house):
+        if self.x + self.width + self.detached <= house.x and \
+            house.x - house.detached >= self.x + self.width:
             return False
-        if h.x - h.detached >= self.x + self.width and \
-           self.x + self.width + self.detached <= h.x:
+        if self.x - self.detached >= house.x + house.width and \
+            house.x + house.width + house.detached <= self.x:
             return False
-        if h.y + h.height + h.detached <= self.y and \
-           self.y - self.detached >= h.y + h.height:
+        if self.y + self.height + self.detached <= house.y and \
+            house.y - house.detached >= self.y + self.height:
             return False
-        if h.y - h.detached >= self.y + self.height and \
-           self.y + self.height + self.detached <= h.y:
+        if self.y - self.detached >= house.y + house.height and \
+            house.y + house.height + house.detached <= self.y:
             return False
+
+        distanceHouses = self.getDistance(house)
+
+        # Checks between left upper corner (self) and right lower corner (house)
+        # for overlap and correct distance per house.
+        if self.x >= house.x + house.width and self.y + self.height <= house.y:
+            if distanceHouses >= self.detached and distanceHouses >= house.detached:
+                return False
+
+        # Checks between right upper corner (self) and left lower corner (house)
+        # for overlap and correct distance per house.
+        if self.x + self.width <= house.x and self.y + self.height >= house.y:
+            if distanceHouses >= self.detached and distanceHouses >= house.detached:
+                return False
+
+        # Checks between left lower corner (self) and right upper corner (house)
+        # for overlap and correct distance per house.
+        if self.x >= house.x + house.width and self.y >= house.y + house.height:
+            if distanceHouses >= self.detached and distanceHouses >= house.detached:
+                return False
+
+        # Checks between right lower corner (self) and left upper corner (house)
+        # for overlap and correct distance per house.
+        if self.x + self.width <= house.x and self.y >= house.y + house.height:
+            if distanceHouses >= self.detached and distanceHouses >= house.detached:
+                return False
+
         return True
 
     # Checks what the distance is between walls and corners of houses, returns
@@ -178,12 +206,12 @@ class House(object):
         # Checks for overlap on vertical axis.
         elif self.x <= house.x <= (self.x + self.width) or \
              self.x <= (house.x + house.width) <= (self.x + self.width):
-                if self.y < house.y:  # Top side
+                if self.y < house.y:  # Upper side
                     distance = (house.y - self.y) - self.height
-                elif self.y > house.y:  # Bottom side
+                elif self.y > house.y:  # Lower side
                     distance = (self.y - house.y) - house.height
 
-        # Checks for overlap on top corners of house using Pythagorean theorem.
+        # Checks for overlap on upper corners of house using Pythagorean theorem.
         elif (self.y + self.height) < house.y:
             if self.x > house.x:  # Left side
                 ab = house.y - (self.y + self.height)
@@ -196,7 +224,7 @@ class House(object):
                 ac = ab**2 + bc**2
                 distance = math.sqrt(ac)
 
-        # Checks for overlap on bottom corners of house using Pythagorean
+        # Checks for overlap on lower corners of house using Pythagorean
         # theorem.
         elif self.y > (house.y + house.height):
             if self.x > house.x:  # Left side
@@ -223,7 +251,7 @@ class House(object):
 class Familyhouse(House):
     """A Familyhouse of type House, with its own values."""
 
-    def __init__(self,x,y):
+    def __init__(self, x,y):
          super(Familyhouse,self).__init__(x,y)
 
     base_sale_price = 285000
@@ -236,8 +264,8 @@ class Familyhouse(House):
 class Bungalow(House):
     """A Bungalow of type House, with its own values."""
 
-    def __init__(self,x,y):
-         super(Bungalow,self).__init__(x,y)
+    def __init__(self, x,y):
+         super(Bungalow, self).__init__(x,y)
 
     base_sale_price = 399000
     width = 10
@@ -249,8 +277,8 @@ class Bungalow(House):
 class Maison(House):
     """A Maison of type House, with its own values."""
 
-    def __init__(self,x,y):
-         super(Maison,self).__init__(x,y)
+    def __init__(self, x,y):
+         super(Maison, self).__init__(x,y)
 
     base_sale_price = 610000
     width = 11

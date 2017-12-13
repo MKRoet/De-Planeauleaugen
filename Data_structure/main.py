@@ -12,6 +12,9 @@
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from matplotlib.patches import FancyBboxPatch
+from matplotlib.patches import BoxStyle
+from matplotlib.path import Path
 import numpy as np
 import sys
 from houseclasses import *
@@ -25,7 +28,7 @@ bestScore = 0
 
 def main():
 
-    # Comand line argument: total runs of the algorithm.
+    # Command line argument: total runs of the algorithm.
     runs_algorithm = int(sys.argv[2])
 
     for i in range(runs_algorithm):
@@ -33,14 +36,14 @@ def main():
 
 def PlotMap():
 
-    # Comand line argument: which type of floor plan should be displayed.
+    # Command line argument: which type of floor plan should be displayed.
     total_houses = int(sys.argv[1])
     if not total_houses in [20, 40, 60]:
         print("The amount of houses has to be 20, 40 or 60.")
         exit()
 
     # Size of window.
-    plt.figure(figsize=(7,7), dpi=100)
+    plt.figure(figsize=(7,7), dpi=300)
 
     # Represents subplot and length of axes.
     ax = plt.subplot(111, aspect='equal')
@@ -65,11 +68,11 @@ def PlotMap():
     ax.set_xticks(major_ticksx)
 
     # Iterates over all houses in house list and creates every house in list.
+    # Uses Rectangle-patch to create house and distance with round corners on map.
     for house in houses.houseList:
 
-        housePlotDetached = patches.Rectangle(((house.x - house.detached), \
-            (house.y - house.detached)), (house.width + house.detached * 2), \
-            (house.height + house.detached * 2), facecolor=house.color, alpha = 0.4)
+        housePlotDetached = patches.FancyBboxPatch((house.x, house.y), house.width, house.height, \
+            boxstyle=BoxStyle.Round(pad=house.detached), color=house.color, alpha = 0.4)
         ax.add_patch(housePlotDetached)
 
         housePlot = patches.Rectangle((house.x,house.y), house.width, house.height,\
