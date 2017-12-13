@@ -48,12 +48,12 @@ def PlotMap():
     ax.axis([0,180,0,160])
 
     # Calls HouseList with its values.
-    houses = HouseList(total_houses)
-    sumScore = houses.getScore(houses)
+    objects = ObjectLists(total_houses)
+    sumScore = objects.getScore(objects)
 
     # Sets titles of labels.
     plt.suptitle('Amstelhaege - De Planeauleaugen', fontsize=16)
-    plt.title('Score: {:,.2f} euro'.format(sumScore), fontsize=12)
+    plt.title('Score: {} euro'.format(int(sumScore)), fontsize=12)
     plt.xlabel('180 meter')
     plt.ylabel('160 meter')
 
@@ -65,15 +65,14 @@ def PlotMap():
     ax.set_xticks(major_ticksx)
 
     # Iterates over all houses in house list and creates every house in list.
-    for house in houses.houseList:
-
+    for house in objects.houseList:
         housePlotDetached = patches.Rectangle(((house.x - house.detached), \
             (house.y - house.detached)), (house.width + house.detached * 2), \
             (house.height + house.detached * 2), facecolor=house.color, alpha = 0.4)
         ax.add_patch(housePlotDetached)
 
-        housePlot = patches.Rectangle((house.x,house.y), house.width, house.height,\
-            facecolor=house.color, edgecolor='black')
+        housePlot = patches.Rectangle((house.x, house.y), house.width, house.height,\
+            facecolor=house.color, edgecolor=house.edgecolor)
         ax.add_patch(housePlot)
 
     # Print the bestScore of the floor plan and plot/save the best floor plan.
@@ -83,7 +82,8 @@ def PlotMap():
         plt.grid()
         plt.savefig('map.png', bbox_inches='tight')
         plt.cla()
-    print("Score: {:,.2f} euro".format(bestScore))
+    print("Score: {} euro".format(int(bestScore)))
+    plt.close()
 
 if __name__ == '__main__':
     main()

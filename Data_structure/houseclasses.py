@@ -5,8 +5,8 @@
 #
 # Course: Heuristics
 #
-# This program creates classes for HouseList and House (with the child classes
-# Familyhouse, Bungalow and Maison). Both have their own methods to check for
+# This program creates classes for ObjectList and MapObjects (with the child classes
+# Familyhouse, Bungalow, Maison and Water). Both have their own methods to check for
 # overlap, distance and score.
 #-------------------------------------------------------------------------------
 
@@ -21,25 +21,35 @@ height_map = 160
 percentage_familyhouse = 0.6
 percentage_bungalow = 0.25
 percentage_maison = 0.15
+percentage_wateropp = 0.2
 max_distance = 99999999
 
 #-------------------------------------------------------------------------------
 
-class HouseList:
-    """HouseList holds and updates the houseList, calculates amount of
-    house types, and checks for map bounds and overlap for every house in list.
+class ObjectLists:
+    """ObjectLists holds and updates the houseList, calculates amount of
+    house types, generate random coordinates for houses in the houseList,
+    checks for map bounds and overlap for every house in list.
     Returns distance and score for total of houseList."""
 
-    # Initializes class HouseList, computes total amount of each house type.
+    # Initializes class ObjectLists, computes total amount of each house type.
     def __init__(self, total_houses):
-        self.houseList=[]
+        self.houseList = []
         self.fh_amount = int(float(total_houses) * percentage_familyhouse)
         self.bgl_amount = int(float(total_houses) * percentage_bungalow)
         self.ms_amount = int(float(total_houses) * percentage_maison)
+        self.amount_waterbodies = Water.amount_waterbodies
 
         # Iterates over every house type, generates random coordinates,
         # sets coordinates for house type, checks for map bounds and overlap.
         # When True, adds house type to houseList.
+        for i in range(self.amount_waterbodies):
+            while True:
+                x,y = self.getRandom_coordinates()
+                house_type = Water(x,y)
+                if self.MapBounds(house_type) and not self.overlap(house_type):
+                    break
+            self.houseList.append(house_type)
         for i in range(self.ms_amount):
             while True:
                 x,y = self.getRandom_coordinates()
@@ -65,7 +75,6 @@ class HouseList:
 
     # Creates random coordinates.
     def getRandom_coordinates(self):
-
         x = random.randint(0,180)
         y = random.randint(0,160)
         return ((x,y))
@@ -96,12 +105,14 @@ class HouseList:
     # Checks for every house the distance to another house, returns shortest
     # distance.
     def getDistance(self, house_type):
+        # print("--------------")
         shortestDistance = max_distance
         for h in self.houseList:
             if h is not house_type:
-                free_space = house_type.getDistance(h)
-                if free_space < shortestDistance:
-                    shortestDistance = free_space
+                if not isinstance(h,Water):
+                    free_space = house_type.getDistance(h)
+                    if free_space < shortestDistance:
+                        shortestDistance = free_space
         return shortestDistance
 
     # Calculates score for every house in houseList, updates sum of score after
@@ -110,13 +121,13 @@ class HouseList:
         sumScore = 0
         for h in self.houseList:
             if h is not house_type:
-                score = House.getScore(self, h)
+                score = MapObjects.getScore(self, h)
                 sumScore += score
         return sumScore
 
-class House(object):
-    """A House checks for overlap and distance to another house, and calculates
-    score based on extra detached distance from other houses. Houses have the
+class MapObjects(object):
+    """A MapObjects checks for overlap and distance to another house, and calculates
+    score based on extra detached distance from other houses. MapObjects have the
     following properties:
 
     Attributes:
@@ -134,7 +145,7 @@ class House(object):
     detached = 0
     percentage_addedvalue = 0
 
-    # Initializes class House with x and y.
+    # Initializes class MapObjects with x and y.
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -214,17 +225,14 @@ class House(object):
 
     # Calculates score for house based on distance from another house.
     def getScore(self, house):
-        detached_extra = HouseList.getDistance(self, house) - house.detached
+        detached_extra = ObjectLists.getDistance(self, house) - house.detached
         totalpercentage_addedvalue = detached_extra * house.percentage_addedvalue
         addedvalue = house.base_sale_price * totalpercentage_addedvalue
         score = house.base_sale_price + addedvalue
         return score
 
-class Familyhouse(House):
-    """A Familyhouse of type House, with its own values."""
-
-    def __init__(self,x,y):
-         super(Familyhouse,self).__init__(x,y)
+class Familyhouse(MapObjects):
+    """A Familyhouse of type MapObjects, with its own values."""
 
     base_sale_price = 285000
     width = 8
@@ -232,12 +240,13 @@ class Familyhouse(House):
     detached = 2
     percentage_addedvalue = 0.03
     color = 'mediumseagreen'
-
-class Bungalow(House):
-    """A Bungalow of type House, with its own values."""
+    edgecolor = 'black'
 
     def __init__(self,x,y):
-         super(Bungalow,self).__init__(x,y)
+        super(Familyhouse,self).__init__(x,y)
+
+class Bungalow(MapObjects):
+    """A Bungalow of type MapObjects, with its own values."""
 
     base_sale_price = 399000
     width = 10
@@ -245,12 +254,13 @@ class Bungalow(House):
     detached = 3
     percentage_addedvalue = 0.04
     color = 'gold'
-
-class Maison(House):
-    """A Maison of type House, with its own values."""
+    edgecolor = 'black'
 
     def __init__(self,x,y):
-         super(Maison,self).__init__(x,y)
+        super(Bungalow,self).__init__(x,y)
+
+class Maison(MapObjects):
+    """A Maison of type MapObjects, with its own values."""
 
     base_sale_price = 610000
     width = 11
@@ -258,3 +268,25 @@ class Maison(House):
     detached = 6
     percentage_addedvalue = 0.06
     color = 'lightcoral'
+    edgecolor = 'black'
+
+    def __init__(self,x,y):
+        super(Maison,self).__init__(x,y)
+
+class Water(MapObjects):
+    """Water of type MapObjects, with its own values."""
+
+    amount_waterbodies = random.randint(1,4)
+
+    total_volume = (((width_map * height_map) * percentage_wateropp) / amount_waterbodies)
+
+    x = random.randint(1,4)
+
+    width = math.sqrt(total_volume/x)
+    height = width * x
+    color = 'lightskyblue'
+    edgecolor = None
+#cornflowerblue
+
+    def __init__(self,x,y):
+        super(Water,self).__init__(x,y)
