@@ -10,11 +10,12 @@
 # overlap, distance and score.
 #-------------------------------------------------------------------------------
 
-from functions import *
 import math
+import random
 
 #-------------------------------------------------------------------------------
 
+# global variables
 width_map = 180
 height_map = 160
 percentage_familyhouse = 0.6
@@ -41,26 +42,33 @@ class HouseList:
         # When True, adds house type to houseList.
         for i in range(self.ms_amount):
             while True:
-                x,y = getRandom_coordinates()
+                x,y = self.getRandom_coordinates()
                 house_type = Maison(x,y)
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
         for i in range(self.bgl_amount):
             while True:
-                x,y = getRandom_coordinates()
+                x,y = self.getRandom_coordinates()
                 house_type = Bungalow(x,y)
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
         for i in range(self.fh_amount):
             while True:
-                x,y = getRandom_coordinates()
+                x,y = self.getRandom_coordinates()
                 house_type = Familyhouse(x,y)
                 if self.MapBounds(house_type) and not self.overlap(house_type):
                     break
             self.houseList.append(house_type)
             self.getScore(house_type)
+
+    # Creates random coordinates.
+    def getRandom_coordinates(self):
+
+        x = random.randint(0,180)
+        y = random.randint(0,160)
+        return ((x,y))
 
     # Checks if house is within map.
     def MapBounds(self, house_type):
