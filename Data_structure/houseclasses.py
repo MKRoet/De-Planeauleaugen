@@ -79,6 +79,25 @@ class ObjectList:
         y = random.randint(0,160)
         return ((x,y))
 
+    # Moves a randomly selected house by one step on the X or Y axis.
+    def moveHouse(self):
+        randomHouse = random.choice(self.houseList)
+        steps = [1, -1]
+        randomStep = random.choice(steps)
+        shafts = ["x", "y"]
+        randomXY = random.choice(shafts)
+
+        if randomXY == "x":
+            randomHouse.x = randomHouse.x + randomStep
+        elif randomXY == "y":
+            randomHouse.y = randomHouse.y + randomStep
+
+        if self.MapBounds(randomHouse) and not self.overlap(randomHouse):
+            return True
+        else:
+            randomHouse.x = randomHouse.x - randomStep
+            return False
+
     # Checks if house is within map.
     def MapBounds(self, object_type):
         if (object_type.x - object_type.detached < 0):

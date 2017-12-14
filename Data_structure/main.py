@@ -94,5 +94,21 @@ def PlotMap():
     print("Score: € {}".format(int(bestScore)))
     plt.close()
 
+# Hillclimber algorithm which moves houses by one step on the axis
+# if it betters the score.
+def hillClimber():
+    global houses
+    PlotMap()
+    bestScore = houses.getScore(houses)
+    for i in range(20000):
+        old_list = deepcopy(houses)
+        if houses.moveHouse() == True:
+            sumScore = houses.getScore(houses)
+            if sumScore > bestScore:
+                bestScore = sumScore
+                print("Best: " + str(bestScore))
+            else:
+                houses = old_list
+
 if __name__ == '__main__':
     main()
