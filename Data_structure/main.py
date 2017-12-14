@@ -6,7 +6,7 @@
 # Course: Heuristics
 #
 # This program creates a floor plan in which 20, 40 or 60 houses are placed.
-# Uses other files names 'houseclasses.py' to generate the
+# Uses the other file 'houseclasses.py' to generate the
 # necessary data.
 #-------------------------------------------------------------------------------
 
