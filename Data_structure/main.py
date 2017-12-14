@@ -18,6 +18,7 @@ from matplotlib.path import Path
 import numpy as np
 import sys
 from houseclasses import *
+from copy import deepcopy
 
 #-------------------------------------------------------------------------------
 
@@ -32,7 +33,7 @@ def main():
     runs_algorithm = int(sys.argv[2])
 
     for i in range(runs_algorithm):
-        PlotMap()
+        hillClimber()
 
 def PlotMap():
 
@@ -51,6 +52,8 @@ def PlotMap():
     ax.axis([0,180,0,160])
 
     # Calls HouseList with its values.
+    global objects
+    global sumScore
     objects = ObjectList(total_houses)
     sumScore = objects.getScore(objects)
 
@@ -97,18 +100,18 @@ def PlotMap():
 # Hillclimber algorithm which moves houses by one step on the axis
 # if it betters the score.
 def hillClimber():
-    global houses
+    global objects
     PlotMap()
-    bestScore = houses.getScore(houses)
+    bestScore = objects.getScore(objects)
     for i in range(20000):
-        old_list = deepcopy(houses)
-        if houses.moveHouse() == True:
-            sumScore = houses.getScore(houses)
+        old_list = deepcopy(objects)
+        if objects.moveHouse() == True:
+            sumScore = objects.getScore(objects)
             if sumScore > bestScore:
                 bestScore = sumScore
                 print("Best: " + str(bestScore))
             else:
-                houses = old_list
+                objects = old_list
 
 if __name__ == '__main__':
     main()

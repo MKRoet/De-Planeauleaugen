@@ -81,7 +81,7 @@ class ObjectList:
 
     # Moves a randomly selected house by one step on the X or Y axis.
     def moveHouse(self):
-        randomHouse = random.choice(self.houseList)
+        randomHouse = random.choice(self.objectList)
         steps = [1, -1]
         randomStep = random.choice(steps)
         shafts = ["x", "y"]
@@ -95,7 +95,10 @@ class ObjectList:
         if self.MapBounds(randomHouse) and not self.overlap(randomHouse):
             return True
         else:
-            randomHouse.x = randomHouse.x - randomStep
+            if randomXY == "x":
+                randomHouse.x = randomHouse.x - randomStep
+            elif randomXY == "y":
+                randomHouse.y = randomHouse.y - randomStep
             return False
 
     # Checks if house is within map.
@@ -113,8 +116,9 @@ class ObjectList:
     # Checks for every house in objectList if overlap exists.
     def overlap(self, object_type):
         for i in self.objectList:
-            if object_type.overlap(i):
-                return True
+            if i is not object_type:
+                if object_type.overlap(i):
+                    return True
         return False
 
     # Returns length of objectList.
