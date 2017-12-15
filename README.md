@@ -22,6 +22,7 @@ Zorg dat je python 3 gebruikt en de volgende onderdelen zijn geïnstalleerd:
 ## Programma runnen
 
 Hoe werkt het programma?
+
 $ python main.py [aantal huizen] [aantal runs] [algoritme]
 
 - aantal huizen: 20, 40 of 60
