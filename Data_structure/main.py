@@ -31,9 +31,19 @@ def main():
 
     # Command line argument: total runs of the algorithm.
     runs_algorithm = int(sys.argv[2])
+    algorithm = sys.argv[3]
+    print(algorithm)
 
     for i in range(runs_algorithm):
-        hillClimber()
+        if algorithm == "random":
+            print("hoi")
+            PlotMap()
+        elif algorithm == "hillclimber":
+            hillClimber()
+        elif algorithm == "simulatedannealer":
+            simulatedAnnealer()
+        elif algorithm == "hillclimberswap":
+            hillClimberswap()
 
 def PlotMap():
 
@@ -97,8 +107,8 @@ def PlotMap():
     print("Score: € {}".format(int(bestScore)))
     plt.close()
 
-# Hillclimber algorithm which moves houses by one step on the axis
-# if it betters the score.
+# Hillclimber algorithm which moves houses by one step on the axis, only if
+# it betters the score.
 def hillClimber():
     global objects
     PlotMap()
@@ -112,6 +122,31 @@ def hillClimber():
                 print("Best: " + str(bestScore))
             else:
                 objects = old_list
+
+# Hillclimber algorithm which swaps two different types of houses, only if it
+# it betters the score.
+def hillClimberswap():
+    global objects
+    PlotMap()
+    bestScore = objects.getScore(objects)
+    for i in range(20000):
+        old_list = deepcopy(objects)
+        if objects.swap() == True:
+            sumScore = objects.getScore(objects)
+            if sumScore > bestScore:
+                bestScore = sumScore
+                print("Best: " + str(bestScore))
+            else:
+                objects = old_list
+
+def simulatedAnnealer():
+    PlotMap()
+    bestScore = objects.getScore(objects)
+    for i in range(20000):
+        old_list = deepcopy(objects)
+        if objects.moveHouse() == True:
+            sumScore = objects.getScore(objects)
+    print("Best: " + str(bestScore))
 
 if __name__ == '__main__':
     main()

@@ -101,6 +101,25 @@ class ObjectList:
                 randomHouse.y = randomHouse.y - randomStep
             return False
 
+    # Swaps the coördinates of two houses.
+    def swap(self):
+        randomHouse1 = random.choice(self.objectList)
+        randomHouse2 = random.choice(self.objectList)
+
+        if randomHouse1 == randomHouse2:
+            return False
+        elif randomHouse1.base_sale_price != randomHouse2.base_sale_price:
+            randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
+            randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
+        else:
+            return False
+
+        if not self.MapBounds(randomHouse1) and self.MapBounds(randomHouse2):
+            return False
+        elif self.overlap(randomHouse1) and self.overlap(randomHouse2):
+            return False
+        return True
+
     # Checks if house is within map.
     def MapBounds(self, object_type):
         if (object_type.x - object_type.detached < 0):
