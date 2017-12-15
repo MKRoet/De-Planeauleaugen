@@ -140,12 +140,17 @@ def hillClimberswap():
 # Simulated annealing algorithm which also accepts moves which lower the score.
 def simulatedAnnealer():
     PlotMap()
+    firstScore = objects.getScore(objects)
     bestScore = objects.getScore(objects)
     for i in range(20000):
         old_list = deepcopy(objects)
         if objects.moveHouse() == True:
             sumScore = objects.getScore(objects)
+            if sumScore > bestScore:
+                bestScore = sumScore        
+            print(sumScore)
     print("Best: " + str(bestScore))
+    print("First: " + str(firstScore))
 
 if __name__ == '__main__':
     main()
