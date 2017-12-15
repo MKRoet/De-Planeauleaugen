@@ -15,7 +15,7 @@ Hiervoor worden algoritmes als random, hillclimber en simulated annealing gebrui
 
 ### Wat heb je nodig
 
-Zorg dat je python 3 gebruikt en de volgende onderdelen geïnstalleerd:
+Zorg dat je python 3 gebruikt en de volgende onderdelen zijn geïnstalleerd:
 - matplotlib
 - numpy
 
