@@ -40,8 +40,6 @@ def main():
             hillClimber()
         elif algorithm == "simulatedannealer":
             simulatedAnnealer()
-        elif algorithm == "hillclimberswap":
-            hillClimberswap()
 
 def PlotMap():
 
