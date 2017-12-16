@@ -94,8 +94,9 @@ class ObjectList:
     # Checks for every house in objectList if overlap exists.
     def overlap(self, object_type):
         for i in self.objectList:
-            if object_type.overlap(i):
-                return True
+            if i is not object_type:
+                if object_type.overlap(i):
+                    return True
         return False
 
     # Returns length of objectList.
@@ -120,8 +121,9 @@ class ObjectList:
         sumScore = 0
         for h in self.objectList:
             if h is not object_type:
-                score = MapObjects.getScore(self, h)
-                sumScore += score
+                if not isinstance(h,Water):
+                    score = MapObjects.getScore(self, h)
+                    sumScore += score
         return sumScore
 
 class MapObjects(object):
@@ -247,7 +249,6 @@ class MapObjects(object):
                 bc = house.x - (self.x + self.width)
                 ac = ab**2 + bc**2
                 distance = math.sqrt(ac)
-
         return distance
 
     # Calculates score for house based on distance from another house.

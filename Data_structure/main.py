@@ -51,6 +51,8 @@ def PlotMap():
     ax.axis([0,180,0,160])
 
     # Calls HouseList with its values.
+    global objects
+    global sumScore
     objects = ObjectList(total_houses)
     sumScore = objects.getScore(objects)
 
@@ -63,7 +65,8 @@ def PlotMap():
     gold_patch = patches.Patch(color='gold', label='Bungalow')
     lightcoral_patch = patches.Patch(color='lightcoral', label='Maison')
     lightskyblue_patch = patches.Patch(color='lightskyblue', label='Water')
-    ax.legend(handles=[mediumseagreen_patch] + [gold_patch] + [lightcoral_patch] + [lightskyblue_patch], loc='center left', bbox_to_anchor=(1, 0.5))
+    ax.legend(handles=[mediumseagreen_patch] + [gold_patch] + [lightcoral_patch] \
+     + [lightskyblue_patch], loc='center left', bbox_to_anchor=(1, 0.5))
 
     # Intervals of grid lines of x and y axes.
     major_ticksy = np.arange(0, 170, 10)
@@ -80,8 +83,8 @@ def PlotMap():
         color=object_type.color, alpha = 0.4)
         ax.add_patch(plotDetached)
 
-        objectPlot = patches.Rectangle((object_type.x, object_type.y), object_type.width, object_type.height,\
-            facecolor=object_type.color)
+        objectPlot = patches.Rectangle((object_type.x, object_type.y), \
+        object_type.width, object_type.height, facecolor=object_type.color)
         ax.add_patch(objectPlot)
 
     # Print the bestScore of the floor plan and plot/save the best floor plan.
