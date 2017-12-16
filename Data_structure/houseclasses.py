@@ -12,6 +12,7 @@
 
 import math
 import random
+from copy import deepcopy
 
 #-------------------------------------------------------------------------------
 
@@ -101,7 +102,7 @@ class ObjectList:
                 randomHouse.y = randomHouse.y - randomStep
             return False
 
-    # Swaps the coördinates of two houses.
+    # Swaps the coördinates of two randomly selected houses.
     def swap(self):
         randomHouse1 = random.choice(self.objectList)
         randomHouse2 = random.choice(self.objectList)
@@ -115,10 +116,30 @@ class ObjectList:
             return False
 
         if not self.MapBounds(randomHouse1) and self.MapBounds(randomHouse2):
+            randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
+            randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
             return False
         elif self.overlap(randomHouse1) and self.overlap(randomHouse2):
+            randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
+            randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
             return False
         return True
+
+    # Places a randomly selected house on a new location.
+    def randomPlacement(self):
+        randomHouse = random.choice(self.objectList)
+        x,y = self.getRandom_coordinates()
+        oldx = deepcopy(randomHouse.x)
+        oldy = deepcopy(randomHouse.y)
+        randomHouse.x = x
+        randomHouse.y = y
+
+        if self.MapBounds(randomHouse) and not self.overlap(randomHouse):
+            return True
+        else:
+            randomHouse.x = oldx
+            randomHouse.y = oldy
+            return False
 
     # Checks if house is within map.
     def MapBounds(self, object_type):
@@ -165,6 +186,12 @@ class ObjectList:
                 score = MapObjects.getScore(self, h)
                 sumScore += score
         return sumScore
+
+    def printlist(self, object_type):
+        for h in self.objectList:
+            print("House: " + str(h))
+            print("X: " + str(h.x))
+            print("Y: " + str(h.y))
 
 class MapObjects(object):
     """A MapObjects checks for overlap and distance to another house, and calculates

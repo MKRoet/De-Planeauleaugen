@@ -105,37 +105,46 @@ def PlotMap():
     print("Score: € {}".format(int(bestScore)))
     plt.close()
 
-# Hillclimber algorithm which moves houses by one step on the axis, only if
-# it betters the score.
+# Hillclimber algorithm which, if it betters the score, moves houses by one
+# step on the axis, by swapping or by relocating it randomly.
 def hillClimber():
     global objects
     PlotMap()
     bestScore = objects.getScore(objects)
-    for i in range(20000):
-        old_list = deepcopy(objects)
-        if objects.moveHouse() == True:
-            sumScore = objects.getScore(objects)
-            if sumScore > bestScore:
-                bestScore = sumScore
-                print("Best: " + str(bestScore))
-            else:
-                objects = old_list
 
-# Hillclimber algorithm which swaps two different types of houses, only if it
-# it betters the score.
-def hillClimberswap():
-    global objects
-    PlotMap()
-    bestScore = objects.getScore(objects)
+    moveType = ["moveHouse", "swap", "randomPlacement"]
+    randomMethod = random.choice(moveType)
+    print("hillClimber_type: " + str(randomMethod))
+
     for i in range(20000):
         old_list = deepcopy(objects)
-        if objects.swap() == True:
-            sumScore = objects.getScore(objects)
-            if sumScore > bestScore:
-                bestScore = sumScore
-                print("Best: " + str(bestScore))
-            else:
-                objects = old_list
+
+        if randomMethod == "moveHouse":
+            if objects.moveHouse() == True:
+                sumScore = objects.getScore(objects)
+                if sumScore > bestScore:
+                    bestScore = sumScore
+                    print("Best: " + str(bestScore))
+                else:
+                    objects = old_list
+
+        elif randomMethod == "swap":
+            if objects.swap()  == True:
+                sumScore = objects.getScore(objects)
+                if sumScore > bestScore:
+                    bestScore = sumScore
+                    print("Best: " + str(bestScore))
+                else:
+                    objects = old_list
+
+        elif randomMethod == "randomPlacement":
+            if objects.randomPlacement() == True:
+                sumScore = objects.getScore(objects)
+                if sumScore > bestScore:
+                    bestScore = sumScore
+                    print("Best: " + str(bestScore))
+                else:
+                    objects = old_list
 
 # Simulated annealing algorithm which also accepts moves which lower the score.
 def simulatedAnnealer():
@@ -147,7 +156,7 @@ def simulatedAnnealer():
         if objects.moveHouse() == True:
             sumScore = objects.getScore(objects)
             if sumScore > bestScore:
-                bestScore = sumScore        
+                bestScore = sumScore
             print(sumScore)
     print("Best: " + str(bestScore))
     print("First: " + str(firstScore))
