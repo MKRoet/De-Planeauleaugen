@@ -18,24 +18,25 @@ Hiervoor worden algoritmes als random, hillclimber en simulated annealing gebrui
 Zorg dat je python 3 gebruikt en de volgende onderdelen zijn geïnstalleerd:
 - matplotlib
 - numpy
+- tqdm
 
 ## Programma runnen
 
 Hoe werkt het programma?
 
-$ python main.py [aantal huizen] [aantal runs] [algoritme]
+$ python main.py [aantal huizen] [algoritme] [aantal runs] [aantal iteraties van algoritme]
 
 - aantal huizen: 20, 40 of 60
-- aantal runs: hoe vaak moet het programma draaien ('1' is in dit geval genoeg)
-<<<<<<< HEAD
-- algoritme: kies welk algoritme gebruikt moet worden (keuze uit: random, hillclimber, hillclimberswap of simulatedannealer)
-=======
-- algoritme: kies welk algoritme gebruikt moet worden (keuze uit: random, hillclimber of simulatedannealer)
->>>>>>> 495c0ecef76ae5614c6ae1565d00663ad53cd075
+- algoritme: kies welk algoritme gebruikt moet worden (keuze uit: random, hillclimber of simulated annealing)
+- aantal runs: hoe vaak moet het programma draaien ('1' is in dit geval genoeg) 
+- aantal iteraties van algoritme: een getal naar keuze (vul voor het random algoritme 0 in)
 
-Voer op de command line bijvoorbeeld het volgende in: python main.py 20 1 hillclimber
+Voer op de command line bijvoorbeeld het volgende in: python main.py 20 hillclimber 1 6
 
-De plattegrond wordt middels matplotlib gegenereerd. Deze is te zien bij gebruik van het random-algoritme in dezelfde map als waarin het programma staat opgeslagen.
+De plattegronden worden middels matplotlib gegenereerd. Deze zijn te zien in dezelfde map als waarin het programma staat opgeslagen:
+- bij een random algoritme onder de naam:  'map.png'
+- bij een hill climber onder de naam: 'before.png' & 'after.png' (Vergelijking van de plattegronden maakt de swap, move of randomplacement visueel. Let op dat wanneer het programma vaker dan één keer wordt gerund, de plattegronden een cijfer krijgen, overeenkomend met de runs van het algoritme)
+- bij een simulated annealing onder de naam: (AANVULLEN)
 
 ## Auteurs
 
