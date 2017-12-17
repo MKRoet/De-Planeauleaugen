@@ -6,7 +6,7 @@
 # Course: Heuristics
 #
 # This program creates a floor plan in which 20, 40 or 60 houses are placed.
-# Uses the other file 'houseclasses.py' to generate the
+# Uses the other file 'houseclasses.py' and algoritms.py to generate the
 # necessary data.
 #-------------------------------------------------------------------------------
 
@@ -18,30 +18,42 @@ from matplotlib.path import Path
 import numpy as np
 import sys
 from houseclasses import *
-
-#-------------------------------------------------------------------------------
-
-# global variable
-bestScore = 0
+from copy import deepcopy
+import algorithms
 
 #-------------------------------------------------------------------------------
 
 def main():
-
-    # Command line argument: total runs of the algorithm.
-    runs_algorithm = int(sys.argv[2])
-
-    for i in range(runs_algorithm):
-        PlotMap()
-
-def PlotMap():
-
-    # Command line argument: which type of floor plan should be displayed.
+    # Command line arguments: which type of floor plan should be displayed,
+    # wich type of algorithm should be used, how many runs of the algorithm and
+    # the amount of iterations in the algorithm.
     total_houses = int(sys.argv[1])
     if not total_houses in [20, 40, 60]:
         print("The amount of houses has to be 20, 40 or 60.")
         exit()
+    algorithm = sys.argv[2]
+    if not algorithm in ["random", "hillclimber", "simulated-annealing"]:
+        print("You can only choose between a random, hillclimber or simulated-annealing algorithm.")
+        exit()
+    runs_algorithm = int(sys.argv[3])
+    if runs_algorithm == 0:
+        print("The algorithms must be run at least once.")
+        exit()
+    try:
+        amount_iterations = int(sys.argv[4])
+    except:
+        print("Choose how many iterations you want, for the random algorithm you can choose 0")
+        exit()
 
+    for i in range(runs_algorithm):
+        if algorithm == "random":
+            PlotMap(total_houses)
+        elif algorithm == "hillclimber":
+            algorithms.algoritms(total_houses, runs_algorithm, amount_iterations)
+        elif algorithm == "simulatedannealer":
+            algorithms.algoritms(total_houses, runs_algorithm, amount_iterations)
+
+def PlotMap(total_houses):
     # Size of window.
     plt.figure(figsize=(7,7), dpi=600)
 
@@ -51,8 +63,6 @@ def PlotMap():
     ax.axis([0,180,0,160])
 
     # Calls HouseList with its values.
-    global objects
-    global sumScore
     objects = ObjectList(total_houses)
     sumScore = objects.getScore(objects)
 
@@ -88,7 +98,8 @@ def PlotMap():
         ax.add_patch(objectPlot)
 
     # Print the bestScore of the floor plan and plot/save the best floor plan.
-    global bestScore
+    bestScore = 0.0
+    
     if sumScore > bestScore:
         bestScore = sumScore
         plt.grid()

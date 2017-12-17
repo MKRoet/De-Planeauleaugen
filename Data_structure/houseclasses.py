@@ -205,7 +205,7 @@ class MapObjects(object):
     # Checks what the distance is between walls and corners of houses, returns
     # distance.
     def getDistance(self, house):
-        global distance
+        distance = 0.0
 
         # Checks for overlap on horizontal axis.
         if self.y <= house.y <= (self.y + self.height) or \
