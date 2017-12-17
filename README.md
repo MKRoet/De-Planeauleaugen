@@ -27,7 +27,11 @@ $ python main.py [aantal huizen] [aantal runs] [algoritme]
 
 - aantal huizen: 20, 40 of 60
 - aantal runs: hoe vaak moet het programma draaien ('1' is in dit geval genoeg)
+<<<<<<< HEAD
 - algoritme: kies welk algoritme gebruikt moet worden (keuze uit: random, hillclimber, hillclimberswap of simulatedannealer)
+=======
+- algoritme: kies welk algoritme gebruikt moet worden (keuze uit: random, hillclimber of simulatedannealer)
+>>>>>>> 495c0ecef76ae5614c6ae1565d00663ad53cd075
 
 Voer op de command line bijvoorbeeld het volgende in: python main.py 20 1 hillclimber
 
