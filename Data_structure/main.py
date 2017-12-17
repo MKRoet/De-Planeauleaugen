@@ -63,8 +63,6 @@ def PlotMap(total_houses):
     ax.axis([0,180,0,160])
 
     # Calls HouseList with its values.
-    global objects
-    global sumScore
     objects = ObjectList(total_houses)
     sumScore = objects.getScore(objects)
 
