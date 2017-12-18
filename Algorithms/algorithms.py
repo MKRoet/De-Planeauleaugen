@@ -21,16 +21,16 @@ from tqdm import tqdm
 # Algorithm Random: gets a generated map and only plots the floor plan with the
 # highest score of all random algorithm runs.
 def RandomAlgorithm(total_houses, runs_algorithm):
-
     bestScore = 0
     bestObjectList = 0
 
-    for run in tqdm(range(runs_algorithm)):
+    for run in tqdm(range(runs_algorithm):
         objects = generateMap(total_houses)
         sumScore = objects.getScore(objects)
 
         if sumScore > bestScore:
             bestScore = sumScore
+            print('{}'.format(int(bestScore)))
             bestObjectList = objects
 
     plotMap(bestObjectList, 'map.png')
@@ -139,33 +139,69 @@ def randomPlacement(objects):
         return False
 
 #-------------------------------------------------------------------------------
-# TODO
-# def SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations):
-#     temp = 10000
-#     coolingRate = 0.003
-#
-#     currentScore = objects.getScore(objects)
-#
-#     while temp > 1:
-#         HillClimber()
-#
-#
-# def acceptanceProbability(score, newScore, temperature):
-#     if (newScore > score):
-#         return 1.0
-#     return exp((score - newScore) / temperature)
+# Algorithm Simulated Annealing: gets a generated map and plots a floor plan of
+# this map for every run of the algorithm. For the amount of iterations in such
+# run,  different random methods will be chosen and run. The floor plan with the
+# highest score of all the iterations will be plotted for every algorithm run.
+def SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations):
+    temperature = 1000000
+    coolingRate = 0.03
 
-# # Simulated annealing algorithm which also accepts moves which lower the score.
-# def SimulatedAnnealing():
-#     PlotMap()
-#     firstScore = objects.getScore(objects)
-#     bestScore = objects.getScore(objects)
-#     for i in range(20000):
-#         old_list = deepcopy(objects)
-#         if objects.moveHouse() == True:
-#             sumScore = objects.getScore(objects)
-#             if sumScore > bestScore:
-#                 bestScore = sumScore
-#             print(sumScore)
-#     print("Best: " + str(bestScore))
-#     print("First: " + str(firstScore))
+    for i in tqdm(range(runs_algorithm)):
+        currentList = GenerateMap(total_houses)
+        bestScore = currentList.getScore(currentList)
+        PlotMap(currentList, 'before.png' + repr(i) + '.png')
+
+        for j in range(amount_iterations):
+            currentScore = currentList.getScore(currentList)
+            newList = deepcopy(currentList)
+            moveType = ["swap", "moveHouse", "randomPlacement"]
+            randomMethod = random.choice(moveType)
+
+            if randomMethod == "moveHouse":
+                if moveHouse(newList) == True:
+                    newScore = newList.getScore(newList)
+                    print("newScore: " + str(newScore))
+                    if newScore > bestScore:
+                        currentList = newList
+                        bestList = newList
+                        bestScore = newScore
+                    elif acceptanceProbability(currentScore, newScore,\
+                        temperature) > random.uniform(0, 1):
+                        currentList = newList
+                    else:
+                        currentList = currentList
+
+            elif randomMethod == "swap":
+                if swap(newList) == True:
+                    newScore = newList.getScore(newList)
+
+                    if newScore > bestScore:
+                        currentList = newList
+                        bestList = newList
+                        bestScore = newScore
+                    elif acceptanceProbability(currentScore, newScore, temperature) > random.uniform(0, 1):
+                        currentList = newList
+                    else:
+                        currentList = currentList
+
+            elif randomMethod == "randomPlacement":
+                if randomPlacement(newList) == True:
+                    newScore = newList.getScore(newList)
+
+                    if newScore > bestScore:
+                        currentList = newList
+                        bestList = newList
+                        bestScore = newScore
+                    elif acceptanceProbability(currentScore, newScore, temperature) > random.uniform(0, 1):
+                        currentList = newList
+                    else:
+                        currentList = currentList
+
+            temperature *= 1 - coolingRate
+        PlotMap(bestList, 'after.png' + repr(i) + '.png')
+
+def acceptanceProbability(currentScore, newScore, temperature):
+    if newScore > currentScore:
+        return 1.0
+    return math.exp((newScore - currentScore) / temperature)
