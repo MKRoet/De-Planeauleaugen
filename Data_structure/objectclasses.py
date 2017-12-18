@@ -1,13 +1,13 @@
 #-------------------------------------------------------------------------------
-# File name: houseclasses.py
+# File name: objectclasses.py
 #
 # Authors: Jet van den Berg, Maurice Roet, Chantal Stangenberger
 #
 # Course: Heuristics
 #
-# This program creates classes for ObjectList and MapObjects (with the child classes
+# This file creates classes for ObjectList and MapObjects (with the child classes
 # Familyhouse, Bungalow, Maison and Water). Both have their own methods to check for
-# overlap, distance and score.
+# overlap, distance and score. TODO
 #-------------------------------------------------------------------------------
 
 import math

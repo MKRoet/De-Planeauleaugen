@@ -5,13 +5,16 @@
 #
 # Course: Heuristics
 #
-# TODO
+# This file contains the different algorithms: RandomAlgorithm, HillClimber and
+# SimulatedAnnealing. The hill climber algorithm uses different functions: moveHouse,
+# swap and randomPlacement. The different functions are randomly called in the
+# HillClimber algorithm. TODO SimulatedAnnealing
 #-------------------------------------------------------------------------------
 
-import random
-from tqdm import tqdm
-from copy import deepcopy
 from plotmap import *
+import random
+from copy import deepcopy
+from tqdm import tqdm
 
 #-------------------------------------------------------------------------------
 
@@ -20,15 +23,31 @@ bestScore = 0
 
 #-------------------------------------------------------------------------------
 
-# TODO
+# Random algorithm
+def RandomAlgorithm(total_houses, runs_algorithm):
+
+    bestScore = 0
+    bestObjectList = 0
+
+    for run in tqdm(range(runs_algorithm)):
+        A = GenerateMap(total_houses)
+        sumScore = A.getScore(A)
+
+        if sumScore > bestScore:
+            bestScore = sumScore
+            bestObjectList = A
+
+    PlotMap(bestObjectList, 'map.png')
+
+#-------------------------------------------------------------------------------
 
 def HillClimber(total_houses, runs_algorithm, amount_iterations):
-    for i in tqdm(range(runs_algorithm)):
+    for run in tqdm(range(runs_algorithm)):
         objects = GenerateMap(total_houses)
-        PlotMap(objects, 'before.png' + repr(i) + '.png')
+        PlotMap(objects, 'before.png' + repr(run) + '.png')
         bestScore = objects.getScore(objects)
 
-        for j in range(amount_iterations):
+        for amount in range(amount_iterations):
             old_list = deepcopy(objects)
             moveType = ["swap", "moveHouse", "randomPlacement"]
             randomMethod = random.choice(moveType)
@@ -58,7 +77,7 @@ def HillClimber(total_houses, runs_algorithm, amount_iterations):
                     else:
                         objects = old_list
 
-        PlotMap(objects, 'after.png' + repr(i) + '.png')
+        PlotMap(objects, 'after.png' + repr(run) + '.png')
 
 # Moves a randomly selected house by one step on the X or Y axis.
 def moveHouse(objects):
@@ -130,20 +149,7 @@ def randomPlacement(objects):
         randomHouse.y = oldy
         return False
 
-def RandomAlgorithm(total_houses, runs_algorithm):
-
-    bestScore = 0
-    bestObjectList = 0
-
-    for i in tqdm(range(runs_algorithm)):
-        A = GenerateMap(total_houses)
-        sumScore = A.getScore(A)
-
-        if sumScore > bestScore:
-            bestScore = sumScore
-            bestObjectList = A
-
-    PlotMap(bestObjectList, 'map.png')
+#-------------------------------------------------------------------------------
 
 # def SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations):
 #     temp = 10000

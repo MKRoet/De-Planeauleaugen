@@ -5,13 +5,13 @@
 #
 # Course: Heuristics
 #
-# This program creates a floor plan in which 20, 40 or 60 houses are placed.
-# Uses the other file 'houseclasses.py' and algoritms.py to generate the
-# necessary data.
+# This file creates a floor plan in which 20, 40 or 60 houses are placed.
+# Uses the other files 'objectclasses.py', 'plotmap.py' and algoritms.py to generate
+# the necessary data. TODO
 #-------------------------------------------------------------------------------
 
 import sys
-from houseclasses import *
+from objectclasses import *
 from copy import deepcopy
 import algorithms
 
