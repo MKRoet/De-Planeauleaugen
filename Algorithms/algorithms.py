@@ -24,7 +24,7 @@ def RandomAlgorithm(total_houses, runs_algorithm):
     bestScore = 0
     bestObjectList = 0
 
-    for run in tqdm(range(runs_algorithm):
+    for run in tqdm(range(runs_algorithm)):
         objects = generateMap(total_houses)
         sumScore = objects.getScore(objects)
 
@@ -33,7 +33,7 @@ def RandomAlgorithm(total_houses, runs_algorithm):
             print('{}'.format(int(bestScore)))
             bestObjectList = objects
 
-    plotMap(bestObjectList, 'map.png')
+    plotMap(bestObjectList, 'randomMap.png')
 
 #-------------------------------------------------------------------------------
 # Algorithm HillClimber: gets a generated map and plots a floor plan of this map
@@ -43,7 +43,6 @@ def RandomAlgorithm(total_houses, runs_algorithm):
 def HillClimber(total_houses, runs_algorithm, amount_iterations):
     for run in tqdm(range(runs_algorithm)):
         objects = generateMap(total_houses)
-        plotMap(objects, 'before.png' + repr(run) + '.png')
         bestScore = objects.getScore(objects)
 
         for amount in range(amount_iterations):
@@ -59,7 +58,7 @@ def HillClimber(total_houses, runs_algorithm, amount_iterations):
                     else:
                         objects = old_list
 
-            elif randomMethod == "swap":
+            elif randomMethod == "swapObject":
                 if swapObject(objects)  == True:
                     sumScore = objects.getScore(objects)
                     if sumScore > bestScore:
@@ -75,7 +74,7 @@ def HillClimber(total_houses, runs_algorithm, amount_iterations):
                     else:
                         objects = old_list
 
-        plotMap(objects, 'after.png' + repr(run) + '.png')
+        plotMap(objects, 'hillClimberMap' + repr(run) + '.png')
 
 # Moves a randomly selected house by one step on the X or Y axis.
 def moveObject(objects):
@@ -112,11 +111,19 @@ def swapObject(objects):
     else:
         return False
 
-    if not objects.mapBounds(randomHouse1) and not objects.mapBounds(randomHouse2):
+    if not objects.mapBounds(randomHouse1):
         randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
         randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
         return False
-    elif objects.overlap(randomHouse1) and objects.overlap(randomHouse2):
+    elif not objects.mapBounds(randomHouse2):
+        randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
+        randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
+        return False
+    elif objects.overlap(randomHouse1):
+        randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
+        randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
+        return False
+    elif objects.overlap(randomHouse2):
         randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
         randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
         return False
@@ -148,20 +155,20 @@ def SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations):
     coolingRate = 0.03
 
     for i in tqdm(range(runs_algorithm)):
-        currentList = GenerateMap(total_houses)
+        currentList = generateMap(total_houses)
+        bestList = currentList
         bestScore = currentList.getScore(currentList)
-        PlotMap(currentList, 'before.png' + repr(i) + '.png')
 
         for j in range(amount_iterations):
             currentScore = currentList.getScore(currentList)
+            print(currentScore)
             newList = deepcopy(currentList)
-            moveType = ["swap", "moveHouse", "randomPlacement"]
+            moveType = ["swapObject", "moveObject", "randomPlacement"]
             randomMethod = random.choice(moveType)
 
-            if randomMethod == "moveHouse":
-                if moveHouse(newList) == True:
+            if randomMethod == "moveObject":
+                if moveObject(newList) == True:
                     newScore = newList.getScore(newList)
-                    print("newScore: " + str(newScore))
                     if newScore > bestScore:
                         currentList = newList
                         bestList = newList
@@ -172,8 +179,8 @@ def SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations):
                     else:
                         currentList = currentList
 
-            elif randomMethod == "swap":
-                if swap(newList) == True:
+            elif randomMethod == "swapObject":
+                if swapObject(newList) == True:
                     newScore = newList.getScore(newList)
 
                     if newScore > bestScore:
@@ -199,7 +206,7 @@ def SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations):
                         currentList = currentList
 
             temperature *= 1 - coolingRate
-        PlotMap(bestList, 'after.png' + repr(i) + '.png')
+        plotMap(bestList, 'simulatedAnnealingMap' + repr(i) + '.png')
 
 def acceptanceProbability(currentScore, newScore, temperature):
     if newScore > currentScore:
