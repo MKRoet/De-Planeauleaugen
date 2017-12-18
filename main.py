@@ -11,15 +11,15 @@
 #-------------------------------------------------------------------------------
 
 import sys
-from houseclasses import *
+from Data_structure.houseclasses import *
 from copy import deepcopy
-import algorithms
+from Algorithms.algorithms import *
 
 #-------------------------------------------------------------------------------
 
 def main():
     # Command line arguments: which type of floor plan should be displayed,
-    # wich type of algorithm should be used, how many runs of the algorithm and
+    # which type of algorithm should be used, how many runs of the algorithm and
     # the amount of iterations in the algorithm.
     total_houses = int(sys.argv[1])
     if not total_houses in [20, 40, 60]:
@@ -27,11 +27,11 @@ def main():
         exit()
     algorithm = sys.argv[2]
     if not algorithm in ["random", "hillclimber", "simulated-annealing"]:
-        print("You can only choose between a random, hillclimber or simulated-annealing algorithm.")
+        print("Choose between 'random', 'hillclimber' or 'simulated-annealing'")
         exit()
     runs_algorithm = int(sys.argv[3])
     if runs_algorithm == 0:
-        print("The algorithms must be run at least once.")
+        print("The algorithm must be run at least once.")
         exit()
     try:
         amount_iterations = int(sys.argv[4])
@@ -40,11 +40,11 @@ def main():
         exit()
 
     if algorithm == "random":
-        algorithms.RandomAlgorithm(total_houses, runs_algorithm)
+        RandomAlgorithm(total_houses, runs_algorithm)
     elif algorithm == "hillclimber":
-        algorithms.HillClimber(total_houses, runs_algorithm, amount_iterations)
+        HillClimber(total_houses, runs_algorithm, amount_iterations)
     elif algorithm == "simulated-annealing":
-        algorithms.SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations)
+        SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations)
 
 if __name__ == '__main__':
     main()

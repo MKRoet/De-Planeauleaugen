@@ -48,28 +48,28 @@ class ObjectList:
             while True:
                 x,y = self.getRandom_coordinates()
                 object_type = Water(x,y)
-                if self.MapBounds(object_type) and not self.overlap(object_type):
+                if self.mapBounds(object_type) and not self.overlap(object_type):
                     break
             self.objectList.append(object_type)
         for i in range(self.ms_amount):
             while True:
                 x,y = self.getRandom_coordinates()
                 object_type = Maison(x,y)
-                if self.MapBounds(object_type) and not self.overlap(object_type):
+                if self.mapBounds(object_type) and not self.overlap(object_type):
                     break
             self.objectList.append(object_type)
         for i in range(self.bgl_amount):
             while True:
                 x,y = self.getRandom_coordinates()
                 object_type = Bungalow(x,y)
-                if self.MapBounds(object_type) and not self.overlap(object_type):
+                if self.mapBounds(object_type) and not self.overlap(object_type):
                     break
             self.objectList.append(object_type)
         for i in range(self.fh_amount):
             while True:
                 x,y = self.getRandom_coordinates()
                 object_type = Familyhouse(x,y)
-                if self.MapBounds(object_type) and not self.overlap(object_type):
+                if self.mapBounds(object_type) and not self.overlap(object_type):
                     break
             self.objectList.append(object_type)
             self.getScore(object_type)
@@ -81,7 +81,7 @@ class ObjectList:
         return ((x,y))
 
     # Checks if house is within map.
-    def MapBounds(self, object_type):
+    def mapBounds(self, object_type):
         if (object_type.x - object_type.detached < 0):
             return False
         if (object_type.x + object_type.width + object_type.detached > width_map):
@@ -306,11 +306,11 @@ class Water(MapObjects):
     """Water of type MapObjects, with its own values."""
 
     # Random amount of waterbodies, between 1 and 4.
-    amount_waterbodies = random.randint(1,4)
+    amount_waterbodies = random.randint(1,2)
 
     # Surface for every individual waterbody.
     surface_waterbody = (((width_map * height_map) * percentage_watersurface) \
-    / amount_waterbodies)
+        / amount_waterbodies)
 
     # Generate the ratio for the waterbodies, ratio can be 1:1, 1:2, 1:3 or 1:4.
     generate_ratio = random.randint(1,4)
