@@ -28,12 +28,11 @@ def HillClimber(total_houses, runs_algorithm, amount_iterations):
         PlotMap(objects, 'before.png' + repr(i) + '.png')
         bestScore = objects.getScore(objects)
 
-        moveType = ["moveHouse", "swap", "randomPlacement"]
-        randomMethod = random.choice(moveType)
-        print("hillClimber_type: " + str(randomMethod))
-
         for j in range(amount_iterations):
             old_list = deepcopy(objects)
+            moveType = ["swap", "moveHouse", "randomPlacement"]
+            randomMethod = random.choice(moveType)
+            # print("hillClimber_type: " + str(randomMethod))
 
             if randomMethod == "moveHouse":
                 if moveHouse(objects) == True:
@@ -64,7 +63,7 @@ def HillClimber(total_houses, runs_algorithm, amount_iterations):
 # Moves a randomly selected house by one step on the X or Y axis.
 def moveHouse(objects):
     randomHouse = random.choice(objects.objectList)
-    steps = [10, -10]
+    steps = [1, -1]
     randomStep = random.choice(steps)
     shafts = ["x", "y"]
     randomXY = random.choice(shafts)
@@ -90,17 +89,26 @@ def swap(objects):
 
     if randomHouse1 == randomHouse2:
         return False
+
     elif randomHouse1.base_sale_price != randomHouse2.base_sale_price:
         randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
         randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
     else:
         return False
 
-    if not objects.MapBounds(randomHouse1) and objects.MapBounds(randomHouse2):
+    if not objects.MapBounds(randomHouse1):
         randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
         randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
         return False
-    elif objects.overlap(randomHouse1) and objects.overlap(randomHouse2):
+    elif not objects.MapBounds(randomHouse2):
+        randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
+        randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
+        return False
+    elif objects.overlap(randomHouse1):
+        randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
+        randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
+        return False
+    elif objects.overlap(randomHouse2):
         randomHouse1.x, randomHouse2.x = randomHouse2.x, randomHouse1.x
         randomHouse1.y, randomHouse2.y = randomHouse2.y, randomHouse1.y
         return False
@@ -136,6 +144,21 @@ def RandomAlgorithm(total_houses, runs_algorithm):
             bestObjectList = A
 
     PlotMap(bestObjectList, 'map.png')
+
+# def SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations):
+#     temp = 10000
+#     coolingRate = 0.003
+#
+#     currentScore = objects.getScore(objects)
+#
+#     while temp > 1:
+#         HillClimber()
+#
+#
+# def acceptanceProbability(score, newScore, temperature):
+#     if (newScore > score):
+#         return 1.0
+#     return exp((score - newScore) / temperature)
 
 # # Simulated annealing algorithm which also accepts moves which lower the score.
 # def SimulatedAnnealing():
