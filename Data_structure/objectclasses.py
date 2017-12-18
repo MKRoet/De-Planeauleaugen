@@ -5,14 +5,13 @@
 #
 # Course: Heuristics
 #
-# This file creates classes for ObjectList and MapObjects (with the child classes
-# Familyhouse, Bungalow, Maison and Water). Both have their own methods to check for
-# overlap, distance and score. TODO
+# This file creates classes for ObjectList and MapObjects (with the child
+# classes Familyhouse, Bungalow, Maison and Water). Both have their own methods
+# to check for overlap, distance and score.
 #-------------------------------------------------------------------------------
 
-import math
 import random
-from copy import deepcopy
+import math
 
 #-------------------------------------------------------------------------------
 
@@ -29,11 +28,12 @@ max_distance = 99999999
 
 class ObjectList:
     """ObjectList holds and updates the objectList, calculates amount of
-    house types, generate random coordinates for houses in the objectList,
-    checks for map bounds and overlap for every house in list.
-    Returns distance and score for total of objectList."""
+    house types and water, generate random coordinates for houses and water in
+    the objectList, checks for map bounds and overlap for every house and water
+    in the list. Returns distance and score for total of objectList."""
 
-    # Initializes class ObjectList, computes total amount of each house type.
+    # Initializes class ObjectList, computes total amount of each house type and
+    # water.
     def __init__(self, total_houses):
         self.objectList = []
         self.fh_amount = int(float(total_houses) * percentage_familyhouse)
@@ -41,35 +41,35 @@ class ObjectList:
         self.ms_amount = int(float(total_houses) * percentage_maison)
         self.amount_waterbodies = Water.amount_waterbodies
 
-        # Iterates over every house type, generates random coordinates,
-        # sets coordinates for house type, checks for map bounds and overlap.
-        # When True, adds house type to objectList.
+        # Iterates over every house type and water, generates random coordinates,
+        # sets coordinates for house type and water, checks for map bounds and
+        # overlap. When True, adds house type or water to objectList.
         for i in range(self.amount_waterbodies):
             while True:
                 x,y = self.getRandom_coordinates()
                 object_type = Water(x,y)
-                if self.MapBounds(object_type) and not self.overlap(object_type):
+                if self.mapBounds(object_type) and not self.overlap(object_type):
                     break
             self.objectList.append(object_type)
         for i in range(self.ms_amount):
             while True:
                 x,y = self.getRandom_coordinates()
                 object_type = Maison(x,y)
-                if self.MapBounds(object_type) and not self.overlap(object_type):
+                if self.mapBounds(object_type) and not self.overlap(object_type):
                     break
             self.objectList.append(object_type)
         for i in range(self.bgl_amount):
             while True:
                 x,y = self.getRandom_coordinates()
                 object_type = Bungalow(x,y)
-                if self.MapBounds(object_type) and not self.overlap(object_type):
+                if self.mapBounds(object_type) and not self.overlap(object_type):
                     break
             self.objectList.append(object_type)
         for i in range(self.fh_amount):
             while True:
                 x,y = self.getRandom_coordinates()
                 object_type = Familyhouse(x,y)
-                if self.MapBounds(object_type) and not self.overlap(object_type):
+                if self.mapBounds(object_type) and not self.overlap(object_type):
                     break
             self.objectList.append(object_type)
             self.getScore(object_type)
@@ -80,8 +80,8 @@ class ObjectList:
         y = random.randint(0,160)
         return ((x,y))
 
-    # Checks if house is within map.
-    def MapBounds(self, object_type):
+    # Checks if house or water is within map.
+    def mapBounds(self, object_type):
         if (object_type.x - object_type.detached < 0):
             return False
         if (object_type.x + object_type.width + object_type.detached > width_map):
@@ -92,17 +92,13 @@ class ObjectList:
             return False
         return True
 
-    # Checks for every house in objectList if overlap exists.
+    # Checks for every house or water in objectList if overlap exists.
     def overlap(self, object_type):
         for i in self.objectList:
             if i is not object_type:
                 if object_type.overlap(i):
                     return True
         return False
-
-    # Returns length of objectList.
-    def getTotal_houses(self):
-        return len(self.objectList)
 
     # Checks for every house the distance to another house, returns shortest
     # distance.
@@ -128,9 +124,9 @@ class ObjectList:
         return sumScore
 
 class MapObjects(object):
-    """A MapObjects checks for overlap and distance to another house, and calculates
-    score based on extra detached distance from other houses. MapObjects have the
-    following properties:
+    """A MapObjects checks for overlap and distance to another house, and
+    calculates score based on extra detached distance from other houses.
+    MapObjects have the following properties:
 
     Attributes:
         base_sale_price: An integer representing the house's price.
@@ -139,6 +135,7 @@ class MapObjects(object):
         detached: The house's required free space in meters.
         percentage_addedvalue: A float representing the house's added value per
             meter extra detached distance.
+        color: The color of a specific house or water.
     """
 
     base_sale_price = 0
@@ -158,9 +155,9 @@ class MapObjects(object):
     def getY(self):
         return self.y
 
-    # Checks for house (self) if other houses (house) on right, left, top,
-    # bottom and corners do not overlap and has correct detached distance to
-    # other houses. False = no overlap.
+    # Checks for house or water (self) if other houses or water (item) on right,
+    # left, top, bottom and corners do not overlap and has correct detached
+    # distance to other houses or water. False = no overlap.
     def overlap(self, item):
         if self.x + self.width + self.detached <= item.x and \
             item.x - item.detached >= self.x + self.width:
@@ -175,27 +172,28 @@ class MapObjects(object):
             item.y + item.height + item.detached <= self.y:
             return False
 
+        # Gets distance between corners of two houses.
         distanceHouses = self.getDistance(item)
 
-        # Checks between left upper corner (self) and right lower corner (house)
+        # Checks between left upper corner (self) and right lower corner (item)
         # for overlap and correct distance per house.
         if self.x >= item.x + item.width and self.y + self.height <= item.y:
             if distanceHouses >= self.detached and distanceHouses >= item.detached:
                 return False
 
-        # Checks between right upper corner (self) and left lower corner (house)
+        # Checks between right upper corner (self) and left lower corner (item)
         # for overlap and correct distance per house.
         if self.x + self.width <= item.x and self.y + self.height >= item.y:
             if distanceHouses >= self.detached and distanceHouses >= item.detached:
                 return False
 
-        # Checks between left lower corner (self) and right upper corner (house)
+        # Checks between left lower corner (self) and right upper corner (item)
         # for overlap and correct distance per house.
         if self.x >= item.x + item.width and self.y >= item.y + item.height:
             if distanceHouses >= self.detached and distanceHouses >= item.detached:
                 return False
 
-        # Checks between right lower corner (self) and left upper corner (house)
+        # Checks between right lower corner (self) and left upper corner (item)
         # for overlap and correct distance per house.
         if self.x + self.width <= item.x and self.y >= item.y + item.height:
             if distanceHouses >= self.detached and distanceHouses >= item.detached:
@@ -271,8 +269,8 @@ class Familyhouse(MapObjects):
     color = 'mediumseagreen'
     edgecolor = 'black'
 
-    def __init__(self,x,y):
-        super(Familyhouse,self).__init__(x,y)
+    def __init__(self, x,y):
+        super(Familyhouse, self).__init__(x,y)
 
 class Bungalow(MapObjects):
     """A Bungalow of type MapObjects, with its own values."""
@@ -285,8 +283,8 @@ class Bungalow(MapObjects):
     color = 'gold'
     edgecolor = 'black'
 
-    def __init__(self,x,y):
-        super(Bungalow,self).__init__(x,y)
+    def __init__(self, x,y):
+        super(Bungalow, self).__init__(x,y)
 
 class Maison(MapObjects):
     """A Maison of type MapObjects, with its own values."""
@@ -299,8 +297,8 @@ class Maison(MapObjects):
     color = 'lightcoral'
     edgecolor = 'black'
 
-    def __init__(self,x,y):
-        super(Maison,self).__init__(x,y)
+    def __init__(self, x,y):
+        super(Maison, self).__init__(x,y)
 
 class Water(MapObjects):
     """Water of type MapObjects, with its own values."""
@@ -308,11 +306,11 @@ class Water(MapObjects):
     # Random amount of waterbodies, between 1 and 4.
     amount_waterbodies = random.randint(1,4)
 
-    # Surface for every individual waterbody.
+    # Surface for every individual waterbody, is 20% of total surface of map.
     surface_waterbody = (((width_map * height_map) * percentage_watersurface) \
-    / amount_waterbodies)
+        / amount_waterbodies)
 
-    # Generate the ratio for the waterbodies, ratio can be 1:1, 1:2, 1:3 or 1:4.
+    # Generates the ratio for the waterbodies, ratio can be 1:1, 1:2, 1:3 or 1:4.
     generate_ratio = random.randint(1,4)
 
     width = math.sqrt(surface_waterbody/generate_ratio)
@@ -320,5 +318,5 @@ class Water(MapObjects):
     color = 'lightskyblue'
     edgecolor = None
 
-    def __init__(self,x,y):
-        super(Water,self).__init__(x,y)
+    def __init__(self, x,y):
+        super(Water, self).__init__(x,y)

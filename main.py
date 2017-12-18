@@ -5,21 +5,21 @@
 #
 # Course: Heuristics
 #
-# This file creates a floor plan in which 20, 40 or 60 houses are placed.
-# Uses the other files 'objectclasses.py', 'plotmap.py' and algoritms.py to generate
-# the necessary data. TODO
+# This file prompt the user for how many houses, which algorithm, how many runs
+# of the algorithm and the amount of iterations should be used to generate the
+# different floor plans. After the specification of the desired algorithm, the
+# specific algorithm will be called from algorithms.py
 #-------------------------------------------------------------------------------
 
+from Data_structure.objectclasses import *
+import Algorithms.algorithms
 import sys
-from objectclasses import *
-from copy import deepcopy
-import algorithms
 
 #-------------------------------------------------------------------------------
 
 def main():
     # Command line arguments: which type of floor plan should be displayed,
-    # wich type of algorithm should be used, how many runs of the algorithm and
+    # which type of algorithm should be used, how many runs of the algorithm and
     # the amount of iterations in the algorithm.
     total_houses = int(sys.argv[1])
     if not total_houses in [20, 40, 60]:
@@ -27,24 +27,28 @@ def main():
         exit()
     algorithm = sys.argv[2]
     if not algorithm in ["random", "hillclimber", "simulated-annealing"]:
-        print("You can only choose between a random, hillclimber or simulated-annealing algorithm.")
+        print("Choose between 'random', 'hillclimber' or 'simulated-annealing'")
         exit()
     runs_algorithm = int(sys.argv[3])
     if runs_algorithm == 0:
-        print("The algorithms must be run at least once.")
+        print("The algorithm must be run at least once.")
         exit()
     try:
         amount_iterations = int(sys.argv[4])
     except:
-        print("Choose how many iterations you want, for the random algorithm you can choose 0")
+        print("Choose amount of iterations, for the random algorithm you can choose 0")
         exit()
 
+    # Calls the specific algorithm function from algorithms.py, which corresponds
+    # to the user input.
     if algorithm == "random":
-        algorithms.RandomAlgorithm(total_houses, runs_algorithm)
+        Algorithms.algorithms.RandomAlgorithm(total_houses, runs_algorithm)
     elif algorithm == "hillclimber":
-        algorithms.HillClimber(total_houses, runs_algorithm, amount_iterations)
+        Algorithms.algorithms.HillClimber(total_houses, runs_algorithm,\
+            amount_iterations)
     elif algorithm == "simulated-annealing":
-        algorithms.SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations)
+        Algorithms.algorithms.SimulatedAnnealing(total_houses, runs_algorithm,\
+            amount_iterations)
 
 if __name__ == '__main__':
     main()
