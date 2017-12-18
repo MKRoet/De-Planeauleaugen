@@ -71,8 +71,7 @@ def plotMap(objects, title):
         ax.add_patch(plotDetached)
 
         objectPlot = patches.Rectangle((object_type.x, object_type.y),\
-            object_type.width, object_type.height, facecolor=object_type.color,\
-            edgecolor=object_type.edgecolor)
+            object_type.width, object_type.height, facecolor=object_type.color,)
         ax.add_patch(objectPlot)
 
     # Plots the floor plan en prints the corresponding score.

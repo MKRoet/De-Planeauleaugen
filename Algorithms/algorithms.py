@@ -5,10 +5,13 @@
 #
 # Course: Heuristics
 #
-# This file contains the different algorithms RandomAlgorithm, HillClimber and
-# SimulatedAnnealing. The HillClimber algorithm uses different functions:
-# moveHouse, swap and randomPlacement. The different functions are randomly
-# called in the HillClimber algorithm. TODO SimulatedAnnealing!!
+# This file contains the different algorithms RandomAlgorithm, Hill Climber and
+# Simulated Annealing. The Hill Climber and Simulated Annealing algorithm use
+# different functions: moveObject, swapObject and randomPlacement. The different
+# functions are randomly called in the these algorithms. All three algorithms
+# will save an image of the highest score generated in the run.
+# Note: 'tqdm' will keep track of the total runs and time the algorithm takes
+# during the run.
 #-------------------------------------------------------------------------------
 
 from Data_structure.plotmap import *
@@ -24,6 +27,8 @@ def RandomAlgorithm(total_houses, runs_algorithm):
     bestScore = 0
     bestObjectList = 0
 
+    # Iterates over list with houses, checks if a better score is found, saves
+    # (new) sumScore as bestScore, and updates list.
     for run in tqdm(range(runs_algorithm)):
         objects = generateMap(total_houses)
         sumScore = objects.getScore(objects)
@@ -36,11 +41,12 @@ def RandomAlgorithm(total_houses, runs_algorithm):
     plotMap(bestObjectList, 'randomMap.png')
 
 #-------------------------------------------------------------------------------
-# Algorithm HillClimber: gets a generated map and plots a floor plan of this map
-# for every run of the algorithm. For the amount of iterations in such run,
+# Algorithm Hill Climber: gets a generated map and plots a floor plan of this
+# map for every run of the algorithm. For the amount of iterations in such run,
 # different random methods will be chosen and run. The floor plan with the
 # highest score of all the iterations will be plotted for every algorithm run.
 def HillClimber(total_houses, runs_algorithm, amount_iterations):
+
     for run in tqdm(range(runs_algorithm)):
         objects = generateMap(total_houses)
         bestScore = objects.getScore(objects)
@@ -76,7 +82,7 @@ def HillClimber(total_houses, runs_algorithm, amount_iterations):
 
         plotMap(objects, 'hillClimberMap' + repr(run) + '.png')
 
-# Moves a randomly selected house by one step on the X or Y axis.
+# Moves a randomly selected object by one step on the X or Y axis.
 def moveObject(objects):
     randomHouse = random.choice(objects.objectList)
     steps = [1, -1]
@@ -98,7 +104,7 @@ def moveObject(objects):
             randomHouse.y = randomHouse.y - randomStep
         return False
 
-# Swaps the coordinates of two randomly selected houses.
+# Swaps the coordinates of two randomly selected objects.
 def swapObject(objects):
     randomHouse1 = random.choice(objects.objectList)
     randomHouse2 = random.choice(objects.objectList)
@@ -148,18 +154,22 @@ def randomPlacement(objects):
 #-------------------------------------------------------------------------------
 # Algorithm Simulated Annealing: gets a generated map and plots a floor plan of
 # this map for every run of the algorithm. For the amount of iterations in such
-# run,  different random methods will be chosen and run. The floor plan with the
+# run, different random methods will be chosen and run. The floor plan with the
 # highest score of all the iterations will be plotted for every algorithm run.
+# Seems the same as Hill Climber, but will escape local maxima early in the
+# process, when a possible better solution is nearby.
 def SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations):
+
+    # Sets temperature and coolingRate, required for Simulated Annealing.
     temperature = 1000000
     coolingRate = 0.03
 
-    for i in tqdm(range(runs_algorithm)):
+    for run in tqdm(range(runs_algorithm)):
         currentList = generateMap(total_houses)
         bestList = currentList
         bestScore = currentList.getScore(currentList)
 
-        for j in range(amount_iterations):
+        for amount in range(amount_iterations):
             currentScore = currentList.getScore(currentList)
             print(currentScore)
             newList = deepcopy(currentList)
@@ -187,7 +197,8 @@ def SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations):
                         currentList = newList
                         bestList = newList
                         bestScore = newScore
-                    elif acceptanceProbability(currentScore, newScore, temperature) > random.uniform(0, 1):
+                    elif acceptanceProbability(currentScore, newScore,\
+                        temperature) > random.uniform(0, 1):
                         currentList = newList
                     else:
                         currentList = currentList
@@ -200,14 +211,19 @@ def SimulatedAnnealing(total_houses, runs_algorithm, amount_iterations):
                         currentList = newList
                         bestList = newList
                         bestScore = newScore
-                    elif acceptanceProbability(currentScore, newScore, temperature) > random.uniform(0, 1):
+                    elif acceptanceProbability(currentScore, newScore,\
+                        temperature) > random.uniform(0, 1):
                         currentList = newList
                     else:
                         currentList = currentList
 
+            # Updates temperature.
             temperature *= 1 - coolingRate
-        plotMap(bestList, 'simulatedAnnealingMap' + repr(i) + '.png')
+        plotMap(bestList, 'simulatedAnnealingMap' + repr(run) + '.png')
 
+# Calculates probability if score should be accepted or not. 1.0 means the new
+# score is better, 0.0 means the new score is worse. math.exp is used to
+# calculate the acceptance probability.
 def acceptanceProbability(currentScore, newScore, temperature):
     if newScore > currentScore:
         return 1.0
